@@ -1,0 +1,17 @@
+#  Ignore node_modules
+node_modules
+
+# Ignore .env file
+.env
+
+# Ignore .DS_Store file
+.DS_Store
+
+# Ignore .vscode file
+.vscode
+
+# Ignore build file
+build
+
+# Ignore dist file
+dist
