@@ -12,11 +12,21 @@ class ProjectController {
     }
   }
 
-  // Gaet all projects
+  // Get all projects
   static getAllProjects = async (req: Request, res: Response) => {
     try {
       const projects = await Project.find();
       res.status(200).json(projects);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // Get a project by id
+  static getProjectById = async (req: Request, res: Response) => {
+    try {
+      const project = await Project.findById(req.params.id);
+      res.status(200).json(project);
     } catch (error) {
       console.log(error);
     }
