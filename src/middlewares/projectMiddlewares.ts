@@ -38,7 +38,7 @@ class ProjectValidation {
     },
   ];
 
-  // Middleware to validate update project
+  // Middleware to validate update project by id
   static validateUpdateProject = [
     check('id')
       .isMongoId().withMessage('Invalid project id'),
@@ -62,7 +62,7 @@ class ProjectValidation {
     },
   ];
 
-  // Middleware to validate delete project
+  // Middleware to validate delete project by id
   static validateDeleteProject = [
     check('id')
       .isMongoId().withMessage('Invalid project id'),
