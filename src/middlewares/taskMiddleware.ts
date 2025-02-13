@@ -20,6 +20,21 @@ class TaskValidation {
     },
   ];
 
+  // Middleware to validate get task by ID
+  static validateGetTaskById = [
+    check('taskId')
+      .isMongoId().withMessage('Invalid task taskId'),
+
+    (req: Request, res: Response, next: NextFunction) => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        res.status(400).json({ errors: errors.array() });
+        return;
+      }
+      next();
+    },
+  ];
+
 
 }
 

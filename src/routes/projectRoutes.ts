@@ -37,4 +37,11 @@ route.get('/:projectId/tasks',
   validateProjectExists,
   TaskController.getAllTasks);
 
+// Route to get a task by ID
+route.get('/:projectId/tasks/:taskId',
+  TaskValidation.validateGetTaskById,
+  validateProjectExists,
+  TaskController.getTaskById);
+
+
 export default route;

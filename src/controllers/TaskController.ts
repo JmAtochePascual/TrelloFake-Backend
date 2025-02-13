@@ -30,6 +30,25 @@ class TaskController {
       console.error(error);
     }
   }
+
+  // Get a task by id from a project
+  static getTaskById = async (req: Request, res: Response) => {
+    const { project } = req;
+    const { taskId } = req.params;
+
+    try {
+      const task = await Task.findById(taskId).where({ project: project.id });
+
+      if (!task) {
+        res.status(404).json({ message: 'Task not found' });
+        return;
+      }
+      res.status(200).json(task);
+
+    } catch (error) {
+      console.error(error);
+    }
+  }
 }
 
 export default TaskController;

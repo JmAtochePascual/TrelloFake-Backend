@@ -17,7 +17,6 @@ export const validateProjectExists = async (req: Request, res: Response, next: N
 
   try {
     const project = await Project.findById(projectId);
-    console.log(project);
 
     if (!project) {
       res.status(404).json({ message: 'Project not found' });
