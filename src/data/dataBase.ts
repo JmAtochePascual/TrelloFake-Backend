@@ -5,7 +5,7 @@ import { exit } from "process";
 dotenv.config();
 
 // Create the connection to the database
-export const connectDB = async () => {
+const connectDB = async () => {
   try {
     const connection = await mongoose.connect(`${process.env.BATABASE_URL}`);
     const url = `${connection.connection.host}:${connection.connection.port}/${connection.connection.name}`;
@@ -17,3 +17,4 @@ export const connectDB = async () => {
   }
 }
 
+export default connectDB;
