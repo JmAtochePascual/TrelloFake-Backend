@@ -31,4 +31,10 @@ route.post('/:projectId/tasks',
   validateProjectExists,
   TaskController.createTask);
 
+
+// Route to get all tasks from a project
+route.get('/:projectId/tasks',
+  validateProjectExists,
+  TaskController.getAllTasks);
+
 export default route;

@@ -17,6 +17,19 @@ class TaskController {
       console.error(error);
     }
   }
+
+  // Get all tasks from a project
+  static getAllTasks = async (req: Request, res: Response) => {
+    const { project } = req;
+
+    try {
+      const tasks = await Task.find({ project: project.id }).populate('project');
+      res.status(200).json(tasks);
+
+    } catch (error) {
+      console.error(error);
+    }
+  }
 }
 
 export default TaskController;
