@@ -38,6 +38,31 @@ class ProjectValidation {
       next();
     },
   ];
+
+  // Middleware to validate update project
+  static validateUpdateProject = [
+    check('id')
+      .notEmpty().withMessage('Project id is required')
+      .isMongoId().withMessage('Invalid project id'),
+
+    check('projectName')
+      .notEmpty().withMessage('Project name is required'),
+
+    check('clientName')
+      .notEmpty().withMessage('Client name is required'),
+
+    check('description')
+      .notEmpty().withMessage('description is required'),
+
+    (req: Request, res: Response, next: NextFunction) => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        res.status(400).json({ errors: errors.array() });
+        return;
+      }
+      next();
+    },
+  ];
 }
 
 export default ProjectValidation;

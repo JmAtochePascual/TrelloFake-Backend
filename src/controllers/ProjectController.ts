@@ -26,7 +26,27 @@ class ProjectController {
   static getProjectById = async (req: Request, res: Response) => {
     try {
       const project = await Project.findById(req.params.id);
+
+      if (!project) {
+        res.status(404).json({ message: 'Project not found' });
+        return;
+      }
       res.status(200).json(project);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // Update a project by id
+  static updateProject = async (req: Request, res: Response) => {
+    try {
+      const updatedProject = await Project.findByIdAndUpdate(req.params.id, req.body, { new: true });
+
+      if (!updatedProject) {
+        res.status(404).json({ message: 'Project not found' });
+        return;
+      }
+      res.status(200).json(updatedProject);
     } catch (error) {
       console.log(error);
     }

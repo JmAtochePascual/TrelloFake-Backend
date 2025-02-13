@@ -13,4 +13,7 @@ route.get('/', ProjectController.getAllProjects);
 // Route to get a project by id
 route.get('/:id', ProjectValidation.validateGetProjectById, ProjectController.getProjectById);
 
+// Route to update a project by ID
+route.put('/:id', ProjectValidation.validateUpdateProject, ProjectController.updateProject);
+
 export default route;
