@@ -26,7 +26,6 @@ class ProjectValidation {
   // Middleware to validate get project by id
   static validateGetProjectById = [
     check('id')
-      .notEmpty().withMessage('Project id is required')
       .isMongoId().withMessage('Invalid project id'),
 
     (req: Request, res: Response, next: NextFunction) => {
@@ -42,7 +41,6 @@ class ProjectValidation {
   // Middleware to validate update project
   static validateUpdateProject = [
     check('id')
-      .notEmpty().withMessage('Project id is required')
       .isMongoId().withMessage('Invalid project id'),
 
     check('projectName')
@@ -53,6 +51,21 @@ class ProjectValidation {
 
     check('description')
       .notEmpty().withMessage('description is required'),
+
+    (req: Request, res: Response, next: NextFunction) => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        res.status(400).json({ errors: errors.array() });
+        return;
+      }
+      next();
+    },
+  ];
+
+  // Middleware to validate delete project
+  static validateDeleteProject = [
+    check('id')
+      .isMongoId().withMessage('Invalid project id'),
 
     (req: Request, res: Response, next: NextFunction) => {
       const errors = validationResult(req);
