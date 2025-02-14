@@ -56,7 +56,7 @@ class TaskController {
     const { taskId } = req.params;
 
     try {
-      const task = await Task.findByIdAndUpdate(taskId, req.body, { new: true }).where({ project: project.id });
+      const task = await Task.findByIdAndUpdate(taskId, req.body).where({ project: project.id });
 
       if (!task) {
         res.status(404).json({ message: 'Task not found' });
@@ -75,12 +75,17 @@ class TaskController {
     const { taskId } = req.params;
 
     try {
-      const task = await Task.findByIdAndDelete(taskId).where({ project: project.id });
+      const task = await Task.findById(taskId).where({ project: project.id });
 
       if (!task) {
         res.status(404).json({ message: 'Task not found' });
         return;
       }
+
+      // Delete the reference of the task from the project
+      project.tasks = project.tasks.filter((task) => task!.toString() !== taskId);
+
+      await Promise.allSettled([task.deleteOne(), project.save()]);
       res.status(200).json({ message: 'Task deleted' });
 
     } catch (error) {
