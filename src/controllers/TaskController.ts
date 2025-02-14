@@ -49,6 +49,25 @@ class TaskController {
       console.error(error);
     }
   }
+
+  // Update a task by id from a project
+  static updateTask = async (req: Request, res: Response) => {
+    const { project } = req;
+    const { taskId } = req.params;
+
+    try {
+      const task = await Task.findByIdAndUpdate(taskId, req.body, { new: true }).where({ project: project.id });
+
+      if (!task) {
+        res.status(404).json({ message: 'Task not found' });
+        return;
+      }
+      res.status(200).json(task);
+
+    } catch (error) {
+      console.error(error);
+    }
+  }
 }
 
 export default TaskController;
