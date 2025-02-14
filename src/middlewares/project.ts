@@ -12,11 +12,11 @@ declare global {
 }
 
 // Validate if the project exists
-export const validateProjectExists = async (req: Request, res: Response, next: NextFunction) => {
+const validateIfProjectExistsById = async (req: Request, res: Response, next: NextFunction) => {
   const { projectId } = req.params;
 
   try {
-    const project = await Project.findById(projectId);
+    const project = await Project.findById(projectId).populate('tasks');
 
     if (!project) {
       res.status(404).json({ message: 'Project not found' });
@@ -29,3 +29,5 @@ export const validateProjectExists = async (req: Request, res: Response, next: N
     console.error(error);
   }
 };
+
+export default validateIfProjectExistsById;

@@ -5,14 +5,11 @@ class TaskController {
 
   // Create a new task to a project
   static createTask = async (req: Request, res: Response) => {
-    const { project } = req;
-
     try {
-      const newTask = new Task({ ...req.body, project: project.id });
-      project.tasks.push(newTask.id);
-      await Promise.allSettled([newTask.save(), project.save()]);
+      const newTask = new Task({ ...req.body, project: req.project.id });
+      req.project.tasks.push(newTask.id);
+      await Promise.allSettled([newTask.save(), req.project.save()]);
       res.status(201).json(newTask);
-
     } catch (error) {
       console.error(error);
     }
@@ -20,12 +17,9 @@ class TaskController {
 
   // Get all tasks from a project
   static getAllTasks = async (req: Request, res: Response) => {
-    const { project } = req;
-
     try {
-      const tasks = await Task.find({ project: project.id }).populate('project');
+      const tasks = await Task.find({ project: req.project.id }).populate('project');
       res.status(200).json(tasks);
-
     } catch (error) {
       console.error(error);
     }
@@ -33,84 +27,45 @@ class TaskController {
 
   // Get a task by ID from a project
   static getTaskById = async (req: Request, res: Response) => {
-    const { project } = req;
-    const { taskId } = req.params;
-
     try {
-      const task = await Task.findById(taskId).where({ project: project.id });
-
-      if (!task) {
-        res.status(404).json({ message: 'Task not found' });
-        return;
-      }
-      res.status(200).json(task);
-
+      res.status(200).json(req.task);
     } catch (error) {
       console.error(error);
     }
   }
 
   // Update a task by ID from a project
-  static updateTask = async (req: Request, res: Response) => {
-    const { project } = req;
-    const { taskId } = req.params;
-
+  static updateTaskById = async (req: Request, res: Response) => {
     try {
-      const task = await Task.findByIdAndUpdate(taskId, req.body).where({ project: project.id });
-
-      if (!task) {
-        res.status(404).json({ message: 'Task not found' });
-        return;
-      }
-      res.status(200).json(task);
-
+      req.task.name = req.body.name;
+      req.task.description = req.body.description;
+      await req.task.save();
+      res.status(200).json(req.task);
     } catch (error) {
       console.error(error);
     }
   }
 
   // Update status of a task from a project
-  static updateTaskStatus = async (req: Request, res: Response) => {
-    const { project } = req;
-    const { taskId } = req.params;
-
+  static updateTaskStatusById = async (req: Request, res: Response) => {
     try {
-      const task = await Task.findById(taskId).where({ project: project.id });
-
-      if (!task) {
-        res.status(404).json({ message: 'Task not found' });
-        return;
-      }
-
       // Update the status of a task
-      task.status = req.body.status;
-      await task.save();
-      res.status(200).json(task);
-
+      req.task.status = req.body.status;
+      await req.task.save();
+      res.status(200).json(req.task);
     } catch (error) {
       console.error(error);
     }
   }
 
   // Delete a task by ID from a project
-  static deleteTask = async (req: Request, res: Response) => {
-    const { project } = req;
+  static deleteTaskById = async (req: Request, res: Response) => {
     const { taskId } = req.params;
-
     try {
-      const task = await Task.findById(taskId).where({ project: project.id });
-
-      if (!task) {
-        res.status(404).json({ message: 'Task not found' });
-        return;
-      }
-
       // Delete the reference of the task from the project
-      project.tasks = project.tasks.filter((task) => task!.toString() !== taskId);
-
-      await Promise.allSettled([task.deleteOne(), project.save()]);
+      req.project.tasks = req.project.tasks.filter((task) => task!.id.toString() !== taskId);
+      await Promise.allSettled([req.task.deleteOne(), req.project.save()]);
       res.status(200).json({ message: 'Task deleted' });
-
     } catch (error) {
       console.error(error);
     }

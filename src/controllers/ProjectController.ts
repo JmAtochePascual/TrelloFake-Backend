@@ -25,42 +25,29 @@ class ProjectController {
   // Get a project by id
   static getProjectById = async (req: Request, res: Response) => {
     try {
-      const project = await Project.findById(req.params.id).populate('tasks');
-
-      if (!project) {
-        res.status(404).json({ message: 'Project not found' });
-        return;
-      }
-      res.status(200).json(project);
+      res.status(200).json(req.project);
     } catch (error) {
       console.log(error);
     }
   }
 
   // Update a project by id
-  static updateProject = async (req: Request, res: Response) => {
+  static updateProjectById = async (req: Request, res: Response) => {
     try {
-      const updatedProject = await Project.findByIdAndUpdate(req.params.id, req.body, { new: true });
-
-      if (!updatedProject) {
-        res.status(404).json({ message: 'Project not found' });
-        return;
-      }
-      res.status(200).json(updatedProject);
+      req.project.projectName = req.body.projectName;
+      req.project.clientName = req.body.clientName;
+      req.project.description = req.body.description;
+      await req.project.save();
+      res.status(200).json(req.project);
     } catch (error) {
       console.log(error);
     }
   }
 
   // Delete a project by id
-  static deleteProject = async (req: Request, res: Response) => {
+  static deleteProjectById = async (req: Request, res: Response) => {
     try {
-      const deletedProject = await Project.findByIdAndDelete(req.params.id);
-
-      if (!deletedProject) {
-        res.status(404).json({ message: 'Project not found' });
-        return;
-      }
+      await req.project.deleteOne();
       res.status(200).json({ message: 'Project deleted' });
     } catch (error) {
       console.log(error);
