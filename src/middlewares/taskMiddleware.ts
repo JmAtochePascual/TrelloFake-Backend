@@ -55,6 +55,21 @@ class TaskValidation {
       next();
     },
   ];
+
+  // Middleware to validate delete task by ID
+  static validateDeleteTask = [
+    check('taskId')
+      .isMongoId().withMessage('Invalid task taskId'),
+
+    (req: Request, res: Response, next: NextFunction) => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        res.status(400).json({ errors: errors.array() });
+        return;
+      }
+      next();
+    },
+  ];
 }
 
 export default TaskValidation;

@@ -40,4 +40,7 @@ route.get('/:projectId/tasks/:taskId', TaskValidation.validateGetTaskById, TaskC
 // Route to update a task by ID
 route.put('/:projectId/tasks/:taskId', TaskValidation.validateUpdateTask, TaskController.updateTask);
 
+// Delete a ptask by ID 
+route.delete('/:projectId/tasks/:taskId', TaskValidation.validateDeleteTask, TaskController.deleteTask);
+
 export default route;

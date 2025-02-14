@@ -31,7 +31,7 @@ class TaskController {
     }
   }
 
-  // Get a task by id from a project
+  // Get a task by ID from a project
   static getTaskById = async (req: Request, res: Response) => {
     const { project } = req;
     const { taskId } = req.params;
@@ -50,7 +50,7 @@ class TaskController {
     }
   }
 
-  // Update a task by id from a project
+  // Update a task by ID from a project
   static updateTask = async (req: Request, res: Response) => {
     const { project } = req;
     const { taskId } = req.params;
@@ -63,6 +63,25 @@ class TaskController {
         return;
       }
       res.status(200).json(task);
+
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  // Delete a task by ID from a project
+  static deleteTask = async (req: Request, res: Response) => {
+    const { project } = req;
+    const { taskId } = req.params;
+
+    try {
+      const task = await Task.findByIdAndDelete(taskId).where({ project: project.id });
+
+      if (!task) {
+        res.status(404).json({ message: 'Task not found' });
+        return;
+      }
+      res.status(200).json({ message: 'Task deleted' });
 
     } catch (error) {
       console.error(error);
