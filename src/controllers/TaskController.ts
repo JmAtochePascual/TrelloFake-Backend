@@ -26,7 +26,7 @@ class TaskController {
   }
 
   // Get a task by ID from a project
-  static getTaskById = async (req: Request, res: Response) => {
+  static getTask = async (req: Request, res: Response) => {
     try {
       res.status(200).json(req.task);
     } catch (error) {
@@ -35,7 +35,7 @@ class TaskController {
   }
 
   // Update a task by ID from a project
-  static updateTaskById = async (req: Request, res: Response) => {
+  static updateTask = async (req: Request, res: Response) => {
     try {
       req.task.name = req.body.name;
       req.task.description = req.body.description;
@@ -47,7 +47,7 @@ class TaskController {
   }
 
   // Update status of a task from a project
-  static updateTaskStatusById = async (req: Request, res: Response) => {
+  static updateTaskStatus = async (req: Request, res: Response) => {
     try {
       // Update the status of a task
       req.task.status = req.body.status;
@@ -59,7 +59,7 @@ class TaskController {
   }
 
   // Delete a task by ID from a project
-  static deleteTaskById = async (req: Request, res: Response) => {
+  static deleteTask = async (req: Request, res: Response) => {
     const { taskId } = req.params;
     try {
       // Delete the reference of the task from the project

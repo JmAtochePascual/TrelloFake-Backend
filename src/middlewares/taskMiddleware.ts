@@ -39,7 +39,7 @@ class TaskValidation {
   ];
 
   // Middleware to validate get task by ID
-  static validateGetTaskById = [
+  static validateGetTask = [
     check('projectId')
       .isMongoId().withMessage('Invalid project id'),
 
@@ -57,7 +57,7 @@ class TaskValidation {
   ];
 
   // Midedleware to validate update task by ID
-  static validateUpdateTaskById = [
+  static validateUpdateTask = [
     check('projectId')
       .isMongoId().withMessage('Invalid project id'),
 
@@ -81,7 +81,7 @@ class TaskValidation {
   ];
 
   // Middleware to validate update task status
-  static validateUpdateTaskStatusById = [
+  static validateUpdateTaskStatus = [
     check('projectId')
       .isMongoId().withMessage('Invalid project id'),
 
@@ -102,7 +102,7 @@ class TaskValidation {
   ];
 
   // Middleware to validate delete task by ID
-  static validateDeleteTaskById = [
+  static validateDeleteTask = [
     check('projectId')
       .isMongoId().withMessage('Invalid project id'),
 

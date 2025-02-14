@@ -4,10 +4,9 @@ import ProjectValidation from '../middlewares/projectMiddlewares';
 import TaskController from '../controllers/TaskController';
 import validateIfProjectExistsById from '../middlewares/project';
 import TaskValidation from '../middlewares/taskMiddleware';
-import validateTaskExistsById from '../middlewares/task';
+import validateIfTaskExistsById from '../middlewares/task';
 
 const route = express.Router();
-
 
 // Route to create a project
 route.post('/',
@@ -39,6 +38,9 @@ route.delete('/:projectId',
 
 //* Routes for tasks **//
 
+// Middleware to validate that a project and task exists
+const validateProjectAndTask = [validateIfProjectExistsById, validateIfTaskExistsById];
+
 // Route to create a task
 route.post('/:projectId/tasks',
   TaskValidation.validateCreateTask,
@@ -53,30 +55,26 @@ route.get('/:projectId/tasks',
 
 // Route to get a task by ID
 route.get('/:projectId/tasks/:taskId',
-  TaskValidation.validateGetTaskById,
-  validateIfProjectExistsById,
-  validateTaskExistsById,
-  TaskController.getTaskById);
+  TaskValidation.validateGetTask,
+  ...validateProjectAndTask,
+  TaskController.getTask);
 
 // Route to update a task by ID
 route.put('/:projectId/tasks/:taskId',
-  TaskValidation.validateUpdateTaskById,
-  validateIfProjectExistsById,
-  validateTaskExistsById,
-  TaskController.updateTaskById);
+  TaskValidation.validateUpdateTask,
+  ...validateProjectAndTask,
+  TaskController.updateTask);
 
 // Route to update the status of a task by ID
 route.post('/:projectId/tasks/:taskId/status',
-  TaskValidation.validateUpdateTaskStatusById,
-  validateIfProjectExistsById,
-  validateTaskExistsById,
-  TaskController.updateTaskStatusById);
+  TaskValidation.validateUpdateTaskStatus,
+  ...validateProjectAndTask,
+  TaskController.updateTaskStatus);
 
 // Delete a ptask by ID 
 route.delete('/:projectId/tasks/:taskId',
-  TaskValidation.validateDeleteTaskById,
-  validateIfProjectExistsById,
-  validateTaskExistsById,
-  TaskController.deleteTaskById);
+  TaskValidation.validateDeleteTask,
+  ...validateProjectAndTask,
+  TaskController.deleteTask);
 
 export default route;

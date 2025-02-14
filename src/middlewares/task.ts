@@ -11,7 +11,7 @@ declare global {
 }
 
 // Validate if a task exists
-const validateTaskExistsById = async (req: Request, res: Response, next: NextFunction) => {
+const validateIfTaskExistsById = async (req: Request, res: Response, next: NextFunction) => {
   const { taskId } = req.params;
 
   try {
@@ -30,4 +30,4 @@ const validateTaskExistsById = async (req: Request, res: Response, next: NextFun
   }
 };
 
-export default validateTaskExistsById;
+export default validateIfTaskExistsById;
