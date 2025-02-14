@@ -69,6 +69,29 @@ class TaskController {
     }
   }
 
+  // Update status of a task from a project
+  static updateTaskStatus = async (req: Request, res: Response) => {
+    const { project } = req;
+    const { taskId } = req.params;
+
+    try {
+      const task = await Task.findById(taskId).where({ project: project.id });
+
+      if (!task) {
+        res.status(404).json({ message: 'Task not found' });
+        return;
+      }
+
+      // Update the status of a task
+      task.status = req.body.status;
+      await task.save();
+      res.status(200).json(task);
+
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   // Delete a task by ID from a project
   static deleteTask = async (req: Request, res: Response) => {
     const { project } = req;

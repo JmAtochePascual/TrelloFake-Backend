@@ -56,6 +56,24 @@ class TaskValidation {
     },
   ];
 
+  // Middleware to validate update task status
+  static validateUpdateTaskStatus = [
+    check('taskId')
+      .isMongoId().withMessage('Invalid task taskId'),
+
+    check('status')
+      .isIn(['pending', 'onHold', 'inProgress', 'underReview', 'completed']).withMessage('Invalid task status'),
+
+    (req: Request, res: Response, next: NextFunction) => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        res.status(400).json({ errors: errors.array() });
+        return;
+      }
+      next();
+    },
+  ];
+
   // Middleware to validate delete task by ID
   static validateDeleteTask = [
     check('taskId')
