@@ -48,7 +48,7 @@ class ProjectController {
   static deleteProjectById = async (req: Request, res: Response) => {
     try {
       await req.project.deleteOne();
-      res.status(200).json({ message: "Project deleted" });
+      res.status(200).json({ message: "Proyecto eliminado" });
     } catch (error) {
       console.log(error);
     }
