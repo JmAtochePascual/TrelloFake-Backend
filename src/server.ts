@@ -1,8 +1,10 @@
-import express from 'express';
-import cors from 'cors';
-import connectDB from './data/dataBase';
-import projectRoutes from './routes/projectRoutes';
-import { CorsOptions } from 'cors';
+import express from "express";
+import cors from "cors";
+import connectDB from "./data/dataBase";
+import projectRoutes from "./routes/projectRoutes";
+import morgan from "morgan";
+
+import { CorsOptions } from "cors";
 
 const app = express();
 
@@ -18,14 +20,17 @@ const corsOptions: CorsOptions = {
     } else {
       callback(new Error("Not allowed by CORS"));
     }
-  }
+  },
 };
 app.use(cors(corsOptions));
+
+// Enable morgan
+app.use(morgan("dev"));
 
 // Enable express.json
 app.use(express.json());
 
 // Routes
-app.use('/api/projects', projectRoutes);
+app.use("/api/projects", projectRoutes);
 
 export default app;
