@@ -15,7 +15,7 @@ class ProjectController {
   // Get all projects
   static getAllProjects = async (req: Request, res: Response) => {
     try {
-      const projects = await Project.find();
+      const projects = await Project.find().populate('tasks');
       res.status(200).json(projects);
     } catch (error) {
       console.log(error);

@@ -9,7 +9,7 @@ class TaskController {
       const newTask = new Task({ ...req.body, project: req.project.id });
       req.project.tasks.push(newTask.id);
       await Promise.allSettled([newTask.save(), req.project.save()]);
-      res.status(201).json(newTask);
+      res.status(201).json({ message: "Tarea creada correctamente" });
     } catch (error) {
       console.error(error);
     }
@@ -40,7 +40,7 @@ class TaskController {
       req.task.name = req.body.name;
       req.task.description = req.body.description;
       await req.task.save();
-      res.status(200).json(req.task);
+      res.status(200).json({ message: "Tarea actualizada correctamente" })
     } catch (error) {
       console.error(error);
     }
@@ -52,7 +52,7 @@ class TaskController {
       // Update the status of a task
       req.task.status = req.body.status;
       await req.task.save();
-      res.status(200).json(req.task);
+      res.status(200).json({ message: "Estado actualizado correctamente" });
     } catch (error) {
       console.error(error);
     }
@@ -65,7 +65,7 @@ class TaskController {
       // Delete the reference of the task from the project
       req.project.tasks = req.project.tasks.filter((task) => task!.id.toString() !== taskId);
       await Promise.allSettled([req.task.deleteOne(), req.project.save()]);
-      res.status(200).json({ message: 'Task deleted' });
+      res.status(200).json({ message: 'Tarea eliminada correctamente' });
     } catch (error) {
       console.error(error);
     }
