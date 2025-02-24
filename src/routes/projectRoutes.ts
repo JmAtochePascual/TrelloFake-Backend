@@ -1,4 +1,4 @@
-import express from 'express';
+import { Router } from 'express';
 import ProjectController from '../controllers/ProjectController';
 import ProjectValidation from '../middlewares/projectMiddlewares';
 import TaskController from '../controllers/TaskController';
@@ -6,7 +6,7 @@ import validateIfProjectExistsById from '../middlewares/project';
 import TaskValidation from '../middlewares/taskMiddleware';
 import validateIfTaskExistsById from '../middlewares/task';
 
-const route = express.Router();
+const route = Router();
 
 // Route to create a project
 route.post('/',

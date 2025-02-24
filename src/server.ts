@@ -1,8 +1,9 @@
 import express from "express";
 import cors from "cors";
 import connectDB from "./data/dataBase";
-import projectRoutes from "./routes/projectRoutes";
 import morgan from "morgan";
+import projectRoutes from "./routes/projectRoutes";
+import authRoutes from "./routes/authRoutes";
 
 import { CorsOptions } from "cors";
 
@@ -31,6 +32,7 @@ app.use(morgan("dev"));
 app.use(express.json());
 
 // Routes
+app.use("/api/auth", authRoutes);
 app.use("/api/projects", projectRoutes);
 
 export default app;
