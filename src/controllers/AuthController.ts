@@ -1,9 +1,8 @@
 import { Request, Response } from "express";
 import User from "../models/UserModel"
 import Token from "../models/TokenModel";
-import { hashPassword } from "../utils/auth";
+import { hashPassword, comparePassword } from '../utils/auth';
 import { generateToken } from "../utils/token";
-import { transport } from "../config/nodemailer";
 import { AuthEmail } from "../emails/AuthEmail";
 
 
@@ -44,7 +43,7 @@ class AuthController {
     }
   }
 
-  // Confirm token
+  // Confirm an account by token
   static async confirmAccount(req: Request, res: Response) {
     try {
       const { token } = req.body;
@@ -72,6 +71,46 @@ class AuthController {
     }
   }
 
+  // Login
+  static async login(req: Request, res: Response) {
+    try {
+      const { email, password } = req.body;
+      const user = await User.findOne({ email });
+
+      // Check if the user exists
+      if (!user) {
+        res.status(404).json({ message: 'User not found' })
+        return;
+      }
+
+      // Check if the user is confirmed
+      if (!user.confirm) {
+
+        // Create a token
+        const token = new Token({
+          token: generateToken(),
+          user: user.id
+        });
+
+        await AuthEmail.sendConfirmationEmail({ name: user.name, email, token: token.token });
+
+        await token.save()
+        res.status(403).json({ message: 'User not confirmed, hemos enviado un email de confirmación' })
+        return;
+      }
+
+      // Check the password 
+      const isMatch = await comparePassword(password, user.password);
+      if (!isMatch) {
+        res.status(401).json({ message: 'Invalid password' })
+        return;
+      }
+
+      res.status(200).json({ message: 'Logueado correctamente' });
+    } catch (error) {
+      console.log(error)
+    }
+  }
 }
 
 export default AuthController

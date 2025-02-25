@@ -47,6 +47,25 @@ class AuthValidation {
       next();
     },
   ]
+
+  // Middleware to validate login
+  static validateLogin = [
+    check('email')
+      .notEmpty().withMessage('User email is required')
+      .isEmail().withMessage('Invalid email'),
+
+    check('password')
+      .notEmpty().withMessage('User password is required'),
+
+    (req: Request, res: Response, next: NextFunction) => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        res.status(400).json({ errors: errors.array() });
+        return;
+      }
+      next();
+    },
+  ]
 }
 
 export default AuthValidation;

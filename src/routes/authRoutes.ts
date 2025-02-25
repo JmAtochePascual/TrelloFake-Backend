@@ -13,4 +13,9 @@ route.post('/confirm-account',
   AuthValidation.validateConfirmAccount,
   AuthController.confirmAccount);
 
+// Route to login
+route.post('/login',
+  AuthValidation.validateLogin,
+  AuthController.login);
+
 export default route;
