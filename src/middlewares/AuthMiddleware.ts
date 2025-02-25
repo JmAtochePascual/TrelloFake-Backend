@@ -33,6 +33,20 @@ class AuthValidation {
     },
   ];
 
+  // Middleware to validate token
+  static validateConfirmAccount = [
+    check('token')
+      .notEmpty().withMessage('Token is required'),
+
+    (req: Request, res: Response, next: NextFunction) => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        res.status(400).json({ errors: errors.array() });
+        return;
+      }
+      next();
+    },
+  ]
 }
 
 export default AuthValidation;

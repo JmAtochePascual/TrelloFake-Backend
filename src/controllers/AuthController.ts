@@ -30,7 +30,7 @@ class AuthController {
       // Create a token
       const token = new Token({
         token: generateToken(),
-        user: newUser._id
+        user: newUser.id
       });
 
       // Send the email
@@ -43,6 +43,35 @@ class AuthController {
       res.status(500).json({ message: 'Error al crear la cuenta' })
     }
   }
+
+  // Confirm token
+  static async confirmAccount(req: Request, res: Response) {
+    try {
+      const { token } = req.body;
+      const tokenDB = await Token.findOne({ token });
+
+      if (!tokenDB) {
+        res.status(404).json({ message: 'Token no encontrado' })
+        return;
+      }
+
+      // Search the user
+      const user = await User.findById(tokenDB.user);
+
+      if (!user) {
+        res.status(404).json({ message: 'Usuario no encontrado' })
+        return;
+      }
+
+      // Confirm the account
+      user.confirm = true
+      await Promise.allSettled([user.save(), tokenDB.deleteOne()])
+      res.status(200).json({ message: 'Cuenta confirmada correctamente' })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
 }
 
 export default AuthController

@@ -8,4 +8,9 @@ route.post('/create-account',
   AuthValidation.validateCreateUser,
   AuthController.createAccount);
 
+// Route to confirm an account
+route.post('/confirm-account',
+  AuthValidation.validateConfirmAccount,
+  AuthController.confirmAccount);
+
 export default route;
