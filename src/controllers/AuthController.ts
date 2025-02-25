@@ -1,14 +1,18 @@
-import User from "../models/UserModel"
 import { Request, Response } from "express";
-import { hashPassword } from "../utils/auth";
+import User from "../models/UserModel"
 import Token from "../models/TokenModel";
+import { hashPassword } from "../utils/auth";
 import { generateToken } from "../utils/token";
+import { transport } from "../config/nodemailer";
+import { AuthEmail } from "../emails/AuthEmail";
 
 
 class AuthController {
+
+  //  Create a new user
   static async createAccount(req: Request, res: Response) {
     try {
-      const { email, password } = req.body
+      const { email, password, name } = req.body
 
       // Validate duplicate email
       const user = await User.findOne({ email })
@@ -29,9 +33,12 @@ class AuthController {
         user: newUser._id
       });
 
+      // Send the email
+      await AuthEmail.sendConfirmationEmail({ name, email, token: token.token });
+
       // Save the user and the token
       await Promise.allSettled([newUser.save(), token.save()])
-      res.status(201).json({ message: 'Cuenta creada correctamente, revisa tu email para confirmar' })
+      res.status(201).json({ message: 'Cuenta creada correctamente, revisa tu email' })
     } catch (error) {
       res.status(500).json({ message: 'Error al crear la cuenta' })
     }
