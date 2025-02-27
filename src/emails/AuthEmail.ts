@@ -23,7 +23,7 @@ export class AuthEmail {
 
         <p>Visita el siguiente enlace:</p>
 
-        <a href="https://uptask-mern.jmcode.dev/confirmar/${token}">Confirmar cuenta</a>
+        <a href="${process.env.FRONTEMD_URL}/auth/confirm-account">Confirmar cuenta</a>
 
         <p>Ingresa el código de confirmación <b>${token}</b></p>
         
