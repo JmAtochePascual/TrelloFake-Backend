@@ -18,4 +18,9 @@ route.post('/login',
   AuthValidation.validateLogin,
   AuthController.login);
 
+// Resend confirmation token
+route.post('/resend-token',
+  AuthValidation.validateResendConfirmationToken,
+  AuthController.resendConfirmationToken);
+
 export default route;

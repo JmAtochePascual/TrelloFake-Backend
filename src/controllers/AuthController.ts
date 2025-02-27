@@ -42,35 +42,6 @@ class AuthController {
       res.status(500).json({ message: 'Error al crear la cuenta' })
     }
   }
-
-  // Confirm an account by token
-  static async confirmAccount(req: Request, res: Response) {
-    try {
-      const { token } = req.body;
-      const tokenDB = await Token.findOne({ token });
-
-      if (!tokenDB) {
-        res.status(404).json({ message: 'Token no encontrado' })
-        return;
-      }
-
-      // Search the user
-      const user = await User.findById(tokenDB.user);
-
-      if (!user) {
-        res.status(404).json({ message: 'Usuario no encontrado' })
-        return;
-      }
-
-      // Confirm the account
-      user.confirm = true
-      await Promise.allSettled([user.save(), tokenDB.deleteOne()])
-      res.status(200).json({ message: 'Cuenta confirmada correctamente' })
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
   // Login
   static async login(req: Request, res: Response) {
     try {
@@ -107,6 +78,67 @@ class AuthController {
       }
 
       res.status(200).json({ message: 'Logueado correctamente' });
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  // Confirm an account by token
+  static async confirmAccount(req: Request, res: Response) {
+    try {
+      const { token } = req.body;
+      const tokenDB = await Token.findOne({ token });
+
+      if (!tokenDB) {
+        res.status(404).json({ message: 'Token no encontrado' })
+        return;
+      }
+
+      // Search the user
+      const user = await User.findById(tokenDB.user);
+
+      if (!user) {
+        res.status(404).json({ message: 'Usuario no encontrado' })
+        return;
+      }
+
+      // Confirm the account
+      user.confirm = true
+      await Promise.allSettled([user.save(), tokenDB.deleteOne()])
+      res.status(200).json({ message: 'Cuenta confirmada correctamente' })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  // Resend confirmation token
+  static async resendConfirmationToken(req: Request, res: Response) {
+    try {
+      const { email } = req.body;
+      const user = await User.findOne({ email });
+
+      // Check if the user exists
+      if (!user) {
+        res.status(404).json({ message: 'Usuario no encontrado' })
+        return;
+      }
+
+      // Check if the user is confirmed
+      if (user.confirm) {
+        res.status(403).json({ message: 'La cuenta ya esta confirmada' })
+        return;
+      }
+
+      // Create a new token
+      const token = new Token({
+        token: generateToken(),
+        user: user.id
+      });
+
+      // Send the email
+      await AuthEmail.sendConfirmationEmail({ name: user.name, email: user.email, token: token.token });
+      await token.save()
+      res.status(200).json({ message: 'Se envió un nuevo token de confirmación, revisa tu email' })
     } catch (error) {
       console.log(error)
     }

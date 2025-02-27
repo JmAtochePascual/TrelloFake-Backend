@@ -66,6 +66,22 @@ class AuthValidation {
       next();
     },
   ]
+
+  // Middleware to validate resend confirmation token
+  static validateResendConfirmationToken = [
+    check('email')
+      .notEmpty().withMessage('User email is required')
+      .isEmail().withMessage('Invalid email'),
+
+    (req: Request, res: Response, next: NextFunction) => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        res.status(400).json({ errors: errors.array() });
+        return;
+      }
+      next();
+    },
+  ]
 }
 
 export default AuthValidation;
