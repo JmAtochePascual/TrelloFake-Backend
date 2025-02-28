@@ -31,4 +31,27 @@ export class AuthEmail {
         `
     })
   }
+
+  static async sendForgotPasswordEmail({ name, email, token }: TSendConfirmationEmail) {
+    await transport.sendMail({
+      from: '"UpTask MERN" <info@jmcode.dev>',
+      to: email,
+      subject: 'Recuperación de contraseña',
+      text: `Hola ${name}, \n\n 
+        Ya puedes recuperar tu contraseña \n\n
+        Si no has solicitado este cambio, ignora este mensaje.`,
+      html: `<p> Hola ${name}, \n\n 
+        Ya puedes recuperar tu contraseña \n\n
+        Si no has solicitado este cambio, ignora este mensaje.</p>
+
+        <p>Visita el siguiente enlace:</p>
+
+        <a href="${process.env.FRONTEMD_URL}/auth/new-password">Reestablecer contraseña</a>
+
+        <p>Ingresa el código de confirmación <b>${token}</b></p>
+        
+        <p>Este token expirará en 10 minutos</p>
+        `
+    })
+  }
 }

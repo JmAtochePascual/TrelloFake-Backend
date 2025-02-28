@@ -143,6 +143,33 @@ class AuthController {
       console.log(error)
     }
   }
+
+  // Forgot password
+  static async forgotPassword(req: Request, res: Response) {
+    try {
+      const { email } = req.body;
+      const user = await User.findOne({ email });
+
+      // Check if the user exists
+      if (!user) {
+        res.status(404).json({ message: 'Usuario no encontrado' })
+        return;
+      }
+
+      // Create a new token
+      const token = new Token({
+        token: generateToken(),
+        user: user.id
+      });
+
+      // Send the email
+      await AuthEmail.sendForgotPasswordEmail({ name: user.name, email: user.email, token: token.token });
+      await token.save()
+      res.status(200).json({ message: 'Revisa tu email y sigue las instrucciones' })
+    } catch (error) {
+      console.log(error)
+    }
+  }
 }
 
 export default AuthController

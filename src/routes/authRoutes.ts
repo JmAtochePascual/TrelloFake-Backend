@@ -23,4 +23,10 @@ route.post('/resend-token',
   AuthValidation.validateResendConfirmationToken,
   AuthController.resendConfirmationToken);
 
+// Forgot password
+route.post('/forgot-password',
+  AuthValidation.validateForgotPassword,
+  AuthController.forgotPassword);
+
+
 export default route;
