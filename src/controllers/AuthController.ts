@@ -33,7 +33,7 @@ class AuthController {
       });
 
       // Send the email
-      await AuthEmail.sendConfirmationEmail({ name, email, token: token.token });
+      await AuthEmail.sendCreateEmail({ name, email, token: token.token });
 
       // Save the user and the token
       await Promise.allSettled([newUser.save(), token.save()])
@@ -42,6 +42,7 @@ class AuthController {
       res.status(500).json({ message: 'Error al crear la cuenta' })
     }
   }
+
   // Login
   static async login(req: Request, res: Response) {
     try {
@@ -50,7 +51,7 @@ class AuthController {
 
       // Check if the user exists
       if (!user) {
-        res.status(404).json({ message: 'User not found' })
+        res.status(404).json({ message: 'Usuario no encontrado' })
         return;
       }
 
@@ -63,17 +64,17 @@ class AuthController {
           user: user.id
         });
 
-        await AuthEmail.sendConfirmationEmail({ name: user.name, email, token: token.token });
+        await AuthEmail.sendResendConfirmationEmail({ name: user.name, email, token: token.token });
 
         await token.save()
-        res.status(403).json({ message: 'User not confirmed, hemos enviado un email de confirmación' })
+        res.status(403).json({ message: 'Cuenta no confirmada, hemos enviado un email de confirmación' })
         return;
       }
 
       // Check the password 
       const isMatch = await comparePassword(password, user.password);
       if (!isMatch) {
-        res.status(401).json({ message: 'Invalid password' })
+        res.status(401).json({ message: 'Contraseña incorrecta' })
         return;
       }
 
@@ -136,7 +137,7 @@ class AuthController {
       });
 
       // Send the email
-      await AuthEmail.sendConfirmationEmail({ name: user.name, email: user.email, token: token.token });
+      await AuthEmail.sendNewConfirmationToken({ name: user.name, email: user.email, token: token.token });
       await token.save()
       res.status(200).json({ message: 'Se envió un nuevo token de confirmación, revisa tu email' })
     } catch (error) {
