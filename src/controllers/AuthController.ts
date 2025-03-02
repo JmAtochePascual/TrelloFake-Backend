@@ -80,7 +80,7 @@ class AuthController {
 
       res.status(200).json({ message: 'Logueado correctamente' });
     } catch (error) {
-      console.log(error)
+      res.status(500).json({ message: 'Error al iniciar sesion' })
     }
   }
 
@@ -108,7 +108,7 @@ class AuthController {
       await Promise.allSettled([user.save(), tokenDB.deleteOne()])
       res.status(200).json({ message: 'Cuenta confirmada correctamente' })
     } catch (error) {
-      console.log(error)
+      res.status(500).json({ message: 'Error al confirmar la cuenta' })
     }
   }
 
@@ -141,7 +141,7 @@ class AuthController {
       await token.save()
       res.status(200).json({ message: 'Se envió un nuevo token de confirmación, revisa tu email' })
     } catch (error) {
-      console.log(error)
+      res.status(500).json({ message: 'Error al enviar el token de confirmación' })
     }
   }
 
@@ -168,7 +168,55 @@ class AuthController {
       await token.save()
       res.status(200).json({ message: 'Revisa tu email y sigue las instrucciones' })
     } catch (error) {
-      console.log(error)
+      res.status(500).json({ message: 'Error al querer restablecer la contraseña' })
+    }
+  }
+
+  // Confirm token password
+  static async confirmationTokenPassword(req: Request, res: Response) {
+    try {
+      const { token } = req.body;
+      const tokenDB = await Token.findOne({ token });
+
+      if (!tokenDB) {
+        res.status(404).json({ message: 'Token no encontrado' })
+        return;
+      }
+
+      res.status(200).json({ message: 'Token validado, define tu nueva contraseña' })
+    } catch (error) {
+      res.status(500).json({ message: 'Error al validar el token' })
+    }
+  }
+
+  // Update password
+  static async updatePasswordWithToken(req: Request, res: Response) {
+    try {
+      const { token } = req.params;
+      const { password } = req.body;
+      const tokenDB = await Token.findOne({ token });
+
+      // Check if the token exists
+      if (!tokenDB) {
+        res.status(404).json({ message: 'Token no encontrado' })
+        return;
+      }
+
+      // Check if the user exists
+      const user = await User.findById(tokenDB.user);
+      if (!user) {
+        res.status(404).json({ message: 'Usuario no encontrado' })
+        return;
+      }
+
+      // Hash the password
+      user.password = await hashPassword(password)
+
+      // Save the user
+      await Promise.allSettled([user.save(), tokenDB.deleteOne()])
+      res.status(200).json({ message: 'Contraseña actualizada correctamente' })
+    } catch (error) {
+      res.status(500).json({ message: 'Error al restablecer la contraseña' })
     }
   }
 }

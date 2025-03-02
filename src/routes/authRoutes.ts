@@ -5,7 +5,7 @@ const route = Router();
 
 // Route to create a new user
 route.post('/create-account',
-  AuthValidation.validateCreateUser,
+  AuthValidation.validateCreateAccount,
   AuthController.createAccount);
 
 // Route to confirm an account
@@ -28,5 +28,14 @@ route.post('/forgot-password',
   AuthValidation.validateForgotPassword,
   AuthController.forgotPassword);
 
+// Confirm token password
+route.post('/confirm-token-password',
+  AuthValidation.validateConfirmAccount,
+  AuthController.confirmationTokenPassword);
+
+// Change password
+route.post('/change-password/:token',
+  AuthValidation.validateChangePassword,
+  AuthController.updatePasswordWithToken);
 
 export default route;

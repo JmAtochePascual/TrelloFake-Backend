@@ -128,13 +128,13 @@ export class AuthEmail {
         <p>Hola <strong>${name}</strong>,</p> 
         <p>Has solicitado restablecer tu contraseña en <strong>TrelloFake</strong>.</p>
         <p>Para continuar con el proceso, utiliza el siguiente código de verificación en la aplicación:</p>
-        <h2 style="text-align:left; color:#333;">${token}</h2>
         <p>O puedes restablecer tu contraseña haciendo clic en el siguiente botón:</p>
         <p>
-          <a href="${process.env.FRONTEMD_URL}/auth/forgot-password" style="background-color:#6C63FF; color:white; padding:10px 20px; text-decoration:none; border-radius:5px; display:inline-block;">
+          <a href="${process.env.FRONTEMD_URL}/auth/new-password" style="background-color:#6C63FF; color:white; padding:10px 20px; text-decoration:none; border-radius:5px; display:inline-block;">
           Restablecer contraseña
           </a>
         </p>
+        <h2 style="text-align:left; color:#333;">${token}</h2>
         <p>Este código expirará en <strong>10 minutos</strong>.</p>
         <p>Si no has solicitado este restablecimiento, puedes ignorar este mensaje.</p>
         <p>Saludos,<br><strong>El equipo de TrelloFake</strong></p>
