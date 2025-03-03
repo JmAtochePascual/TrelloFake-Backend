@@ -4,6 +4,7 @@ import Token from "../models/TokenModel";
 import { hashPassword, comparePassword } from '../utils/auth';
 import { generateToken } from "../utils/token";
 import { AuthEmail } from "../emails/AuthEmail";
+import { generateJWT } from "../utils/jwt";
 
 
 class AuthController {
@@ -77,6 +78,17 @@ class AuthController {
         res.status(401).json({ message: 'Contraseña incorrecta' })
         return;
       }
+
+      // Generate swt
+      const jwtToken = generateJWT({ id: user.id });
+
+      // Set up the cookie
+      res.cookie('jwt-trelloFake', jwtToken, {
+        httpOnly: true,
+        secure: false,
+        sameSite: 'lax',
+        maxAge: 7 * 24 * 60 * 60 * 1000 // exipere in 7 days
+      })
 
       res.status(200).json({ message: 'Logueado correctamente' });
     } catch (error) {

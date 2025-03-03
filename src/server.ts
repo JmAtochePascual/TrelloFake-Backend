@@ -6,11 +6,15 @@ import projectRoutes from "./routes/projectRoutes";
 import authRoutes from "./routes/authRoutes";
 
 import { CorsOptions } from "cors";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
 // Connect to the database
 connectDB();
+
+// Enable cookies
+app.use(cookieParser());
 
 // Enable CORS
 const corsList = [process.env.FRONTEMD_URL];
@@ -22,6 +26,7 @@ const corsOptions: CorsOptions = {
       callback(new Error("Not allowed by CORS"));
     }
   },
+  credentials: true,
 };
 app.use(cors(corsOptions));
 
