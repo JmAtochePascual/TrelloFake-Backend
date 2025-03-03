@@ -38,9 +38,4 @@ route.post('/change-password/:token',
   AuthValidation.validateChangePassword,
   AuthController.updatePasswordWithToken);
 
-route.get('/cookie', (req, res) => {
-  console.log(req.cookies);
-  res.send('reading token');
-})
-
 export default route;

@@ -83,7 +83,7 @@ class AuthController {
       const jwtToken = generateJWT({ id: user.id });
 
       // Set up the cookie
-      res.cookie('jwt-trelloFake', jwtToken, {
+      res.cookie('jwtTrelloFake', jwtToken, {
         httpOnly: true,
         secure: false,
         sameSite: 'lax',

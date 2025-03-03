@@ -5,6 +5,7 @@ import TaskController from '../controllers/TaskController';
 import validateIfProjectExistsById from '../middlewares/project';
 import TaskValidation from '../middlewares/taskMiddleware';
 import validateIfTaskExistsById from '../middlewares/task';
+import { validateAuthenticate } from '../middlewares/Auth';
 
 const route = Router();
 
@@ -15,6 +16,7 @@ route.post('/',
 
 // Route to get all projects
 route.get('/',
+  validateAuthenticate,
   ProjectController.getAllProjects);
 
 // Route to get a project by ID
