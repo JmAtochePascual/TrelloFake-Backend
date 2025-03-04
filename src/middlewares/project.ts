@@ -19,7 +19,13 @@ const validateIfProjectExistsById = async (req: Request, res: Response, next: Ne
     const project = await Project.findById(projectId).populate('tasks');
 
     if (!project) {
-      res.status(404).json({ message: 'Project not found' });
+      res.status(404).json({ message: 'Proyecto no encontrado' });
+      return;
+    }
+
+    // Check if the user is the manager of the project
+    if (project.manager!.toString()! !== req.user.id.toString()) {
+      res.status(403).json({ message: 'No cuentas con los permisos necesarios' });
       return;
     }
 

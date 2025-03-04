@@ -7,7 +7,7 @@ import User, { TUser } from '../models/UserModel';
 declare global {
   namespace Express {
     interface Request {
-      user?: TUser;
+      user: TUser;
     }
   }
 }

@@ -5,7 +5,9 @@ class ProjectController {
   // Method to create a project
   static createProject = async (req: Request, res: Response) => {
     try {
-      await Project.create(req.body);
+      const project = new Project(req.body);
+      project.manager = req.user.id;
+      await project.save();
       res.status(201).json({ message: "Proyecto creado correctamente" });
     } catch (error) {
       console.log(error);
@@ -14,9 +16,8 @@ class ProjectController {
 
   // Get all projects
   static getAllProjects = async (req: Request, res: Response) => {
-    console.log(req.user);
     try {
-      const projects = await Project.find().populate('tasks');
+      const projects = await Project.find({ manager: req.user.id }).populate('tasks');
       res.status(200).json(projects);
     } catch (error) {
       console.log(error);

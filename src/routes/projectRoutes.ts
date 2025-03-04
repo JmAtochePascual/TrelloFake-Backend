@@ -12,6 +12,7 @@ const route = Router();
 // Route to create a project
 route.post('/',
   ProjectValidation.validateCreateProject,
+  validateAuthenticate,
   ProjectController.createProject);
 
 // Route to get all projects
@@ -22,18 +23,21 @@ route.get('/',
 // Route to get a project by ID
 route.get('/:projectId',
   ProjectValidation.validateGetProjectById,
+  validateAuthenticate,
   validateIfProjectExistsById,
   ProjectController.getProjectById);
 
 // Route to update a project by ID
 route.put('/:projectId',
   ProjectValidation.validateUpdateProjectById,
+  validateAuthenticate,
   validateIfProjectExistsById,
   ProjectController.updateProjectById);
 
 // Route to delete a project by ID
 route.delete('/:projectId',
   ProjectValidation.validateDeleteProjectById,
+  validateAuthenticate,
   validateIfProjectExistsById,
   ProjectController.deleteProjectById);
 
