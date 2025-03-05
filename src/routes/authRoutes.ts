@@ -1,6 +1,7 @@
 import { Router } from "express";
 import AuthValidation from "../middlewares/AuthMiddleware";
 import AuthController from "../controllers/AuthController";
+import { validateAuthenticate } from "../middlewares/Auth";
 const route = Router();
 
 // Route to create a new user
@@ -37,5 +38,14 @@ route.post('/confirm-token-password',
 route.post('/change-password/:token',
   AuthValidation.validateChangePassword,
   AuthController.updatePasswordWithToken);
+
+// Get user
+route.get('/user',
+  validateAuthenticate,
+  AuthController.getUser);
+
+// Logout
+route.get('/logout',
+  AuthController.logout);
 
 export default route;

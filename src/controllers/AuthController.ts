@@ -231,6 +231,27 @@ class AuthController {
       res.status(500).json({ message: 'Error al restablecer la contraseña' })
     }
   }
+
+  // Get user
+  static async getUser(req: Request, res: Response) {
+    try {
+      res.status(200).json(req.user)
+    } catch (error) {
+      res.status(500).json({ message: 'Error al obtener el usuario' })
+    }
+  }
+
+  // Logout
+  static async logout(req: Request, res: Response) {
+    try {
+      // Delete the token from cookie
+      res.cookie("jwtTrelloFake", "", { expires: new Date(0), path: "/" });
+      res.cookie("refreshToken", "", { expires: new Date(0), path: "/" });
+      res.status(200).json({ message: 'Se cerró la sesión' })
+    } catch (error) {
+      res.status(500).json({ message: 'Error al cerrar la sesión' })
+    }
+  }
 }
 
 export default AuthController
