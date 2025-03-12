@@ -7,8 +7,6 @@ export type ProjectType = Document & {
   projectName: string;
   clientName: string;
   description: string;
-  tasks: PopulatedDoc<TaskType & Document>[];
-  manager: PopulatedDoc<TUser & Document>;
 }
 
 // Creates the schema for the project model
@@ -27,16 +25,6 @@ const ProjectSchema: Schema = new Schema({
     type: String,
     trim: true,
     required: true
-  },
-  tasks: [
-    {
-      type: Types.ObjectId,
-      ref: "Task",
-    }
-  ],
-  manager: {
-    type: Types.ObjectId,
-    ref: "User",
   }
 }, {
   timestamps: true

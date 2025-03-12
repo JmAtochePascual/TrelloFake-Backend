@@ -4,7 +4,6 @@ import connectDB from "./data/dataBase";
 import morgan from "morgan";
 import projectRoutes from "./routes/projectRoutes";
 import authRoutes from "./routes/authRoutes";
-
 import { CorsOptions } from "cors";
 import cookieParser from "cookie-parser";
 
@@ -12,6 +11,9 @@ const app = express();
 
 // Connect to the database
 connectDB();
+
+// Enable json
+app.use(express.json());
 
 // Enable cookies
 app.use(cookieParser());
@@ -36,8 +38,7 @@ app.use(morgan("dev"));
 // Enable express.json
 app.use(express.json());
 
-// Routes
-app.use("/api/auth", authRoutes);
+// Router for projects
 app.use("/api/projects", projectRoutes);
 
 export default app;

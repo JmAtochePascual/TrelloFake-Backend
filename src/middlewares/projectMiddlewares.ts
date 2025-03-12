@@ -3,15 +3,15 @@ import { check, validationResult } from 'express-validator';
 
 class ProjectValidation {
   // Middleware to validate project creation
-  static validateCreateProject = [
+  static createProject = [
     check('projectName')
-      .notEmpty().withMessage('Project name is required'),
+      .notEmpty().withMessage('El nombre del proyecto es requerido'),
 
     check('clientName')
-      .notEmpty().withMessage('Client name is required'),
+      .notEmpty().withMessage('El nombre del cliente es requerido'),
 
     check('description')
-      .notEmpty().withMessage('description is required'),
+      .notEmpty().withMessage('La descripción es requerida'),
 
     (req: Request, res: Response, next: NextFunction) => {
       const errors = validationResult(req);
@@ -24,9 +24,9 @@ class ProjectValidation {
   ];
 
   // Middleware to validate get project by id
-  static validateGetProjectById = [
+  static getProject = [
     check('projectId')
-      .isMongoId().withMessage('Invalid project id'),
+      .isMongoId().withMessage('ID de proyecto inválido'),
 
     (req: Request, res: Response, next: NextFunction) => {
       const errors = validationResult(req);
@@ -39,18 +39,18 @@ class ProjectValidation {
   ];
 
   // Middleware to validate update project by id
-  static validateUpdateProjectById = [
+  static updateProject = [
     check('projectId')
-      .isMongoId().withMessage('Invalid project id'),
+      .isMongoId().withMessage('ID de proyecto inválido'),
 
     check('projectName')
-      .notEmpty().withMessage('Project name is required'),
+      .notEmpty().withMessage('El nombre del proyecto es requerido'),
 
     check('clientName')
-      .notEmpty().withMessage('Client name is required'),
+      .notEmpty().withMessage('El nombre del cliente es requerido'),
 
     check('description')
-      .notEmpty().withMessage('description is required'),
+      .notEmpty().withMessage('La descripción es requerida'),
 
     (req: Request, res: Response, next: NextFunction) => {
       const errors = validationResult(req);
@@ -63,7 +63,7 @@ class ProjectValidation {
   ];
 
   // Middleware to validate delete project by id
-  static validateDeleteProjectById = [
+  static deleteProject = [
     check('projectId')
       .isMongoId().withMessage('Invalid project id'),
 
