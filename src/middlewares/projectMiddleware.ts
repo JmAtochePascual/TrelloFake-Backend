@@ -1,5 +1,14 @@
 import { Request, Response, NextFunction } from 'express';
 import { check, validationResult } from 'express-validator';
+import Project, { ProjectType } from '../models/ProjectModel';
+
+declare global {
+  namespace Express {
+    interface Request {
+      project: ProjectType;
+    }
+  }
+}
 
 class ProjectValidation {
   // Middleware to validate project creation
@@ -76,6 +85,25 @@ class ProjectValidation {
       next();
     },
   ];
+
+  static projectExists = async (req: Request, res: Response, next: NextFunction) => {
+    const { projectId } = req.params;
+
+    try {
+      const project = await Project.findById(projectId);
+
+      // Check if the project exists
+      if (!project) {
+        res.status(404).json({ message: 'Proyecto no encontrado' });
+        return;
+      }
+
+      req.project = project;
+      next();
+    } catch (error) {
+      res.status(500).json({ message: 'Error al obtener el proyecto' });
+    }
+  };
 }
 
 export default ProjectValidation;

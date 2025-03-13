@@ -3,7 +3,6 @@ import cors from "cors";
 import connectDB from "./data/dataBase";
 import morgan from "morgan";
 import projectRoutes from "./routes/projectRoutes";
-import authRoutes from "./routes/authRoutes";
 import { CorsOptions } from "cors";
 import cookieParser from "cookie-parser";
 

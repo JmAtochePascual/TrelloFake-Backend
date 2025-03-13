@@ -3,71 +3,92 @@ import Task from '../models/TaskModel';
 
 class TaskController {
 
-  // Create a new task to a project
-  static createTask = async (req: Request, res: Response) => {
+  // Method to create a task
+  static async createTask(req: Request, res: Response) {
+    const { project } = req;
+
     try {
-      const newTask = new Task({ ...req.body, project: req.project.id });
-      req.project.tasks.push(newTask.id);
-      await Promise.allSettled([newTask.save(), req.project.save()]);
+      // Create the task
+      const task = new Task(req.body);
+      task.project = project.id;
+
+      // Save the task and the project
+      project.tasks.push(task.id);
+
+      await Promise.allSettled([task.save(), project.save()]);
       res.status(201).json({ message: "Tarea creada correctamente" });
     } catch (error) {
-      console.error(error);
+      res.status(500).json({ message: "Error al crear la tarea" });
     }
   }
 
-  // Get all tasks from a project
-  static getAllTasks = async (req: Request, res: Response) => {
+  // Method to get all tasks of a project
+  static async getAllTasks(req: Request, res: Response) {
+    const { project } = req;
     try {
-      const tasks = await Task.find({ project: req.project.id }).populate('project');
+      const tasks = await Task.find({ project: project.id }).populate('project');
       res.status(200).json(tasks);
     } catch (error) {
-      console.error(error);
+      res.status(500).json({ message: "Error al obtener las tareas" });
     }
   }
 
-  // Get a task by ID from a project
-  static getTask = async (req: Request, res: Response) => {
+  // Method to get a task by ID
+  static async getTask(req: Request, res: Response) {
+    const { task } = req;
+
     try {
-      res.status(200).json(req.task);
+      res.status(200).json(task);
     } catch (error) {
-      console.error(error);
+      res.status(500).json({ message: "Error al obtener la tarea" });
     }
   }
 
-  // Update a task by ID from a project
-  static updateTask = async (req: Request, res: Response) => {
+  // Method to update a task by ID
+  static async updateTask(req: Request, res: Response) {
+    const { task } = req;
+
     try {
-      req.task.name = req.body.name;
-      req.task.description = req.body.description;
-      await req.task.save();
-      res.status(200).json({ message: "Tarea actualizada correctamente" })
+      // Update the task
+      task.name = req.body.name;
+      task.description = req.body.description;
+
+      await task.save();
+      res.status(200).json({ message: "Tarea actualizada correctamente" });
     } catch (error) {
-      console.error(error);
+      res.status(500).json({ message: "Error al actualizar la tarea" });
     }
   }
 
-  // Update status of a task from a project
-  static updateTaskStatus = async (req: Request, res: Response) => {
+  // Method to update the status of a task
+  static async updateStatus(req: Request, res: Response) {
+    const { task } = req;
+
     try {
-      // Update the status of a task
-      req.task.status = req.body.status;
-      await req.task.save();
-      res.status(200).json({ message: "Estado actualizado correctamente" });
+      // Update the task status
+      task.status = req.body.status;
+
+      await task.save();
+      res.status(200).json({ message: "Estado de la tarea actualizado correctamente" });
     } catch (error) {
-      console.error(error);
+      res.status(500).json({ message: "Error al actualizar el estado de la tarea" });
     }
   }
 
-  // Delete a task by ID from a project
-  static deleteTask = async (req: Request, res: Response) => {
-    const { taskId } = req.params;
+  // Method to delete a task by ID
+  static async deleteTask(req: Request, res: Response) {
+    const { task } = req;
+    const { project } = req;
+
     try {
-      // Delete the reference of the task from the project
-      req.project.tasks = req.project.tasks.filter((task) => task!.id.toString() !== taskId);
-      await Promise.allSettled([req.task.deleteOne(), req.project.save()]);
-      res.status(200).json({ message: 'Tarea eliminada correctamente' });
+      // Remove the task from the project
+      project.tasks = project.tasks.filter(taskIdRef => taskIdRef && taskIdRef.toString() !== task.id);
+
+      // Delete the task
+      await Promise.allSettled([task.deleteOne(), project.save()]);
+      res.status(200).json({ message: "Tarea eliminada correctamente" });
     } catch (error) {
-      console.error(error);
+      res.status(500).json({ message: "Error al eliminar la tarea" });
     }
   }
 }

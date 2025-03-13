@@ -1,12 +1,12 @@
 import mongoose, { Schema, Document, Types, PopulatedDoc } from "mongoose";
 import { TaskType } from "./TaskModel";
-import { TUser } from "./UserModel";
 
 // Creates the types for the project model
 export type ProjectType = Document & {
   projectName: string;
   clientName: string;
   description: string;
+  tasks: PopulatedDoc<TaskType & Document>[];
 }
 
 // Creates the schema for the project model
@@ -25,7 +25,11 @@ const ProjectSchema: Schema = new Schema({
     type: String,
     trim: true,
     required: true
-  }
+  },
+  tasks: [{
+    type: Types.ObjectId,
+    ref: 'Task'
+  }]
 }, {
   timestamps: true
 });

@@ -17,7 +17,7 @@ class ProjectController {
   // Method to get all projects
   static getProjects = async (req: Request, res: Response) => {
     try {
-      const projects = await Project.find();
+      const projects = await Project.find().populate('tasks');
       res.status(200).json(projects);
     } catch (error) {
       res.status(500).json({ message: "Error al obtener los proyectos" });
@@ -29,7 +29,7 @@ class ProjectController {
     const { projectId } = req.params;
 
     try {
-      const project = await Project.findById(projectId);
+      const project = await Project.findById(projectId).populate('tasks');
 
       // Check if the project exists
       if (!project) {
