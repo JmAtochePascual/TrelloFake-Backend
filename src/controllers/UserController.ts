@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
 import User from "../models/UserModel";
-import { hashPassword } from "../utils/auth";
+import { comparePassword, hashPassword } from "../utils/auth";
 import Token from "../models/TokenModel";
 import { generateToken } from "../utils/token";
 import AuthEmail from "../emails/email";
+import { generateJWT } from "../utils/jwt";
 
 class UserController {
 
@@ -74,7 +75,59 @@ class UserController {
     }
   }
 
-  // Get a user by ID
+  // Login a user
+  static async login(req: Request, res: Response) {
+    const { email, password } = req.body;
+
+    try {
+      // Check if user exists
+      const user = await User.findOne({ email });
+      if (!user) {
+        res.status(404).json({ message: "Usuario no encontrado" });
+        return;
+      }
+
+      // Check if user is confirmed
+      if (!user.confirmed) {
+        res.status(401).json({ message: "Usuario no confirmado" });
+        return;
+      }
+
+      // Check if password is correct
+      const isMatch = await comparePassword(password, user.password);
+      if (!isMatch) {
+        res.status(401).json({ message: "Contraseña incorrecta" });
+        return;
+      }
+
+      // Generate jwt
+      const jwt = generateJWT({ id: user.id });
+
+      // Config cookies
+      res.cookie("trelloToken", jwt, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "lax",
+        expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 1 week
+      });
+
+      // Send response
+      res.sendStatus(200);
+    } catch (error) {
+      res.status(500).json({ message: "Error al login el usuario" });
+    }
+  };
+
+  // Logout a user TODO:
+  static async logout(req: Request, res: Response) {
+    try {
+      res.send("Logout a user");
+    } catch (error) {
+      res.status(500).json({ message: "Error al logout el usuario" });
+    }
+  };
+
+  // Get a user by ID TODO:
   static async getUser(req: Request, res: Response) {
     try {
       res.send("Obtener un usuario");
@@ -83,7 +136,7 @@ class UserController {
     }
   };
 
-  // Update a user by ID
+  // Update a user by ID TODO:
   static async updateUser(req: Request, res: Response) {
     try {
       res.send("Usuario actualizado correctamente");
@@ -92,30 +145,12 @@ class UserController {
     }
   };
 
-  // Delete a user by ID
+  // Delete a user by ID TODO:
   static async deleteUser(req: Request, res: Response) {
     try {
       res.send("Usuario eliminado correctamente");
     } catch (error) {
       res.status(500).json({ message: "Error al eliminar el usuario" });
-    }
-  };
-
-  // Login a user
-  static async login(req: Request, res: Response) {
-    try {
-      res.send("Login a user");
-    } catch (error) {
-      res.status(500).json({ message: "Error al login el usuario" });
-    }
-  };
-
-  // Logout a user
-  static async logout(req: Request, res: Response) {
-    try {
-      res.send("Logout a user");
-    } catch (error) {
-      res.status(500).json({ message: "Error al logout el usuario" });
     }
   };
 

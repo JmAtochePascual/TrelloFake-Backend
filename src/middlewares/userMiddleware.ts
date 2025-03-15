@@ -44,6 +44,24 @@ class UserValidation {
       next();
     },
   ];
+
+  // Middleware to login a user
+  static login = [
+    check('email')
+      .notEmpty().withMessage('El correo electrónico es requerido')
+      .isEmail().withMessage('El correo electrónico no es válido'),
+
+    check('password')
+      .notEmpty().withMessage('La contraseña es requerida'),
+    (req: Request, res: Response, next: NextFunction) => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        res.status(400).json({ errors: errors.array() });
+        return;
+      }
+      next();
+    },
+  ];
 };
 
 export default UserValidation;

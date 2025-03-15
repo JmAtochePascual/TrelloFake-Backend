@@ -9,24 +9,27 @@ router.post("/create",
   UserValidation.createUser,
   UserController.createUser);
 
-// Router to get a user by ID
-router.get("/:id", UserController.getUser);
-
 // Router to confirm a user by token
 router.post("/user-confirm",
   UserValidation.confirmUser,
   UserController.confirmUser);
 
-// Router to update a user by ID
+// Router to login a user 
+router.post("/login",
+  UserValidation.login,
+  UserController.login);
+
+// Router to logout a user TODO:
+router.post("/logout", UserController.logout);
+
+// Router to get a user by ID TODO:
+router.get("/:id", UserController.getUser);
+
+// Router to update a user by ID TODO:
 router.put("/:id", UserController.updateUser);
 
-// Router to delete a user by ID
+// Router to delete a user by ID TODO:
 router.delete("/:id", UserController.deleteUser);
 
-// Router to login a user 
-router.post("/login", UserController.login);
-
-// Router to logout a user 
-router.post("/logout", UserController.logout);
 
 export default router;
