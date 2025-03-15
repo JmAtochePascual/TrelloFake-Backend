@@ -43,6 +43,35 @@ class UserController {
     } catch (error) {
       res.status(500).json({ message: "Error al crear el usuario" });
     }
+  };
+
+  // Confirm user
+  static async confirmUser(req: Request, res: Response) {
+    const { token } = req.body;
+
+    try {
+      // Find the token
+      const tokenExists = await Token.findOne({ token });
+      if (!tokenExists) {
+        res.status(401).json({ message: "Token no valido" });
+        return;
+      }
+
+      // Find the user
+      const user = await User.findById(tokenExists.user);
+      if (!user) {
+        res.status(404).json({ message: "Usuario no encontrado" });
+        return;
+      }
+
+      // Set the user as confirmed
+      user.confirmed = true;
+
+      await Promise.allSettled([user.save(), tokenExists.deleteOne()]);
+      res.status(200).json({ message: "Usuario confirmado correctamente" });
+    } catch (error) {
+      res.status(500).json({ message: "Error al confirmar el usuario" });
+    }
   }
 
   // Get a user by ID
@@ -52,7 +81,7 @@ class UserController {
     } catch (error) {
       res.status(500).json({ message: "Error al obtener el usuario" });
     }
-  }
+  };
 
   // Update a user by ID
   static async updateUser(req: Request, res: Response) {
@@ -61,7 +90,7 @@ class UserController {
     } catch (error) {
       res.status(500).json({ message: "Error al actualizar el usuario" });
     }
-  }
+  };
 
   // Delete a user by ID
   static async deleteUser(req: Request, res: Response) {
@@ -70,7 +99,7 @@ class UserController {
     } catch (error) {
       res.status(500).json({ message: "Error al eliminar el usuario" });
     }
-  }
+  };
 
   // Login a user
   static async login(req: Request, res: Response) {
@@ -79,7 +108,7 @@ class UserController {
     } catch (error) {
       res.status(500).json({ message: "Error al login el usuario" });
     }
-  }
+  };
 
   // Logout a user
   static async logout(req: Request, res: Response) {
@@ -88,7 +117,7 @@ class UserController {
     } catch (error) {
       res.status(500).json({ message: "Error al logout el usuario" });
     }
-  }
+  };
 
 }
 

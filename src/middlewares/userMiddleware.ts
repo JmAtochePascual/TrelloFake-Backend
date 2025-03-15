@@ -29,6 +29,21 @@ class UserValidation {
       next();
     },
   ];
+
+  // Middleware to valide token
+  static confirmUser = [
+    check('token')
+      .notEmpty().withMessage('El token es requerido')
+      .isLength({ min: 6 }).withMessage('El token no es válido'),
+    (req: Request, res: Response, next: NextFunction) => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        res.status(400).json({ errors: errors.array() });
+        return;
+      }
+      next();
+    },
+  ];
 };
 
 export default UserValidation;

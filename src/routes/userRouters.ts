@@ -12,6 +12,11 @@ router.post("/create",
 // Router to get a user by ID
 router.get("/:id", UserController.getUser);
 
+// Router to confirm a user by token
+router.post("/user-confirm",
+  UserValidation.confirmUser,
+  UserController.confirmUser);
+
 // Router to update a user by ID
 router.put("/:id", UserController.updateUser);
 
