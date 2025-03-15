@@ -129,6 +129,7 @@ class TaskValidation {
     },
   ];
 
+  // Middleware to validate task exists by ID
   static taskExists = async (req: Request, res: Response, next: NextFunction) => {
     const { taskId } = req.params;
     const { project } = req;

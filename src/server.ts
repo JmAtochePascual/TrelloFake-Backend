@@ -5,6 +5,7 @@ import morgan from "morgan";
 import projectRoutes from "./routes/projectRoutes";
 import { CorsOptions } from "cors";
 import cookieParser from "cookie-parser";
+import userRoutes from "./routes/userRouters";
 
 const app = express();
 
@@ -36,6 +37,9 @@ app.use(morgan("dev"));
 
 // Enable express.json
 app.use(express.json());
+
+// Router for users
+app.use("/api/auth", userRoutes);
 
 // Router for projects
 app.use("/api/projects", projectRoutes);
