@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
 import User from "../models/UserModel";
 import { hashPassword } from "../utils/auth";
+import Token from "../models/TokenModel";
+import { generateToken } from "../utils/token";
+import AuthEmail from "../emails/email";
 
 class UserController {
 
@@ -22,8 +25,20 @@ class UserController {
       // Hash the password
       newUser.password = await hashPassword(password);
 
+      // Create the token
+      const token = new Token();
+      token.token = generateToken();
+      token.user = newUser.id;
+
+      // Send the email
+      await AuthEmail.sendCreateUserEmail({
+        email: newUser.email,
+        name: newUser.name,
+        token: token.token
+      });
+
       // Save the user
-      await newUser.save();
+      Promise.allSettled([newUser.save(), token.save()]);
       res.status(201).json({ message: "Revisa tu correo electrónico para confirmar" });
     } catch (error) {
       res.status(500).json({ message: "Error al crear el usuario" });
