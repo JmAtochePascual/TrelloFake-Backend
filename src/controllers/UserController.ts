@@ -87,6 +87,13 @@ class UserController {
         return;
       }
 
+      // Check if password is correct
+      const isMatch = await comparePassword(password, user.password);
+      if (!isMatch) {
+        res.status(401).json({ message: "Contraseña incorrecta" });
+        return;
+      }
+
       // Check if user is confirmed
       if (!user.confirmed) {
         const token = new Token();
@@ -102,13 +109,6 @@ class UserController {
 
         await token.save();
         res.status(401).json({ message: "Usuario no confirmado, revisa tu correo electrónico para confirmar" });
-        return;
-      }
-
-      // Check if password is correct
-      const isMatch = await comparePassword(password, user.password);
-      if (!isMatch) {
-        res.status(401).json({ message: "Contraseña incorrecta" });
         return;
       }
 

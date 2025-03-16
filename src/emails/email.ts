@@ -24,7 +24,7 @@ class AuthEmail {
             <li>Introduce el siguiente código de verificación en la página correspondiente:</li>
           </ul>
           <div style="text-align: center; margin: 20px 0;">
-            <a href="" 
+            <a href="${process.env.FRONTEMD_URL}/auth/confirm-user" 
                style="background-color: #6A4EE9; color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 5px; display: inline-block; font-weight: bold;">
               Confirmar cuenta
             </a>
@@ -57,7 +57,7 @@ class AuthEmail {
             <li>Introduce el código de verificación en la página correspondiente:</li>
           </ul>
           <div style="text-align: center; margin: 20px 0;">
-            <a href="" 
+            <a href="${process.env.FRONTEMD_URL}/auth/confirm-user" 
                style="background-color: #6A4EE9; color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 5px; display: inline-block; font-weight: bold;">
               Confirmar cuenta
             </a>
