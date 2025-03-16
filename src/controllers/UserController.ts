@@ -87,6 +87,12 @@ class UserController {
         return;
       }
 
+      // Check if the user is confirmed
+      if (user.confirmed) {
+        res.status(400).json({ message: "Usuario ya confirmado" });
+        return;
+      }
+
       // Create the token
       const token = new Token();
       token.token = generateToken();
@@ -133,9 +139,34 @@ class UserController {
 
       // Save the token
       await Promise.allSettled([user.save(), token.save()]);
-      res.status(200).json({ message: "Revisa tu correo electrónico para verificar tu cuenta" });
+      res.status(200).json({ message: "Revisa tu correo electrónico para cambiar tu contraseña" });
     } catch (error) {
       res.status(500).json({ message: "Error al reenviar el token" });
+    }
+  }
+
+  // Verify token password
+  static async verifyTokenPassword(req: Request, res: Response) {
+    const { token } = req.body;
+
+    try {
+      // Find the token
+      const tokenExists = await Token.findOne({ token });
+      if (!tokenExists) {
+        res.status(404).json({ message: "Token no encontrado" });
+        return;
+      }
+
+      // Find the user
+      const user = await User.findById(tokenExists.user);
+      if (!user) {
+        res.status(404).json({ message: "Usuario no encontrado" });
+        return;
+      }
+
+      res.status(200).json({ message: "Token válido" });
+    } catch (error) {
+      res.status(500).json({ message: "Error al verificar el token" });
     }
   }
 

@@ -24,6 +24,11 @@ router.post("/forgot-password",
   UserValidation.forgotPassword,
   UserController.forgotPassword);
 
+// Router to verify forgot password token
+router.post("/verify-token",
+  UserValidation.verifyTokenPassword,
+  UserController.verifyTokenPassword);
+
 // Router to login a user 
 router.post("/login",
   UserValidation.login,
