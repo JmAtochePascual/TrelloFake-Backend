@@ -89,7 +89,19 @@ class UserController {
 
       // Check if user is confirmed
       if (!user.confirmed) {
-        res.status(401).json({ message: "Usuario no confirmado" });
+        const token = new Token();
+        token.token = generateToken();
+        token.user = user.id;
+
+        // send the email
+        await AuthEmail.sendUnverifiedLoginEmail({
+          email: user.email,
+          token: token.token,
+          name: user.name
+        })
+
+        await token.save();
+        res.status(401).json({ message: "Usuario no confirmado, revisa tu correo electrónico para confirmar" });
         return;
       }
 
