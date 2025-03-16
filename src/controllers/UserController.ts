@@ -16,7 +16,7 @@ class UserController {
       // Check if the user exists
       const user = await User.findOne({ email });
       if (user) {
-        res.status(409).json({ message: "El usuario ya existe" });
+        res.status(409).json({ message: "El email ya esta registrado" });
         return;
       }
 
@@ -32,7 +32,7 @@ class UserController {
       token.user = newUser.id;
 
       // Send the email
-      await AuthEmail.sendCreateUserEmail({
+      await AuthEmail.emailCreateAccount({
         email: newUser.email,
         name: newUser.name,
         token: token.token
@@ -40,7 +40,7 @@ class UserController {
 
       // Save the user
       Promise.allSettled([newUser.save(), token.save()]);
-      res.status(201).json({ message: "Revisa tu correo electrónico para confirmar" });
+      res.status(201).json({ message: "Revisa tu correo electrónico para confirmar tu cuenta" });
     } catch (error) {
       res.status(500).json({ message: "Error al crear el usuario" });
     }
@@ -68,11 +68,74 @@ class UserController {
       // Set the user as confirmed
       user.confirmed = true;
 
-      // await Promise.allSettled([user.save(), tokenExists.deleteOne()]);
-      await user.save();
+      await Promise.allSettled([user.save(), tokenExists.deleteOne()]);
       res.status(200).json({ message: "Usuario confirmado correctamente" });
     } catch (error) {
       res.status(500).json({ message: "Error al confirmar el usuario" });
+    }
+  }
+
+  // Resent token
+  static async resendToken(req: Request, res: Response) {
+    const { email } = req.body;
+
+    try {
+      // Find the user
+      const user = await User.findOne({ email });
+      if (!user) {
+        res.status(404).json({ message: "Email no registrado" });
+        return;
+      }
+
+      // Create the token
+      const token = new Token();
+      token.token = generateToken();
+      token.user = user.id;
+
+      // Send the email
+      await AuthEmail.resendTokenEmail({
+        email: user.email,
+        token: token.token,
+        name: user.name
+      })
+
+      // Save the token
+      await Promise.allSettled([user.save(), token.save()]);
+      res.status(200).json({ message: "Revisa tu correo electrónico para verificar tu cuenta" });
+    } catch (error) {
+      res.status(500).json({ message: "Error al reenviar el token" });
+    }
+  }
+
+  // Forgot password
+  static async forgotPassword(req: Request, res: Response) {
+    const { email } = req.body;
+
+    try {
+      // Find the user
+      const user = await User.findOne({ email });
+      if (!user) {
+        res.status(404).json({ message: "Email no registrado" });
+        return;
+      }
+
+      // Create the token
+      const token = new Token();
+      token.token = generateToken();
+      token.user = user.id;
+
+      // Send the email
+      await AuthEmail.forgotPasswordEmail({
+        email: user.email,
+        token: token.token,
+        name: user.name
+      })
+
+      // Save the token
+      await Promise.allSettled([user.save(), token.save()]);
+      res.status(200).json({ message: "Revisa tu correo electrónico para verificar tu cuenta" });
+    } catch (error) {
+      res.status(500).json({ message: "Error al reenviar el token" });
     }
   }
 
@@ -128,74 +191,6 @@ class UserController {
       res.sendStatus(200);
     } catch (error) {
       res.status(500).json({ message: "Error al login el usuario" });
-    }
-  };
-
-  // Resent token
-  static async resentToken(req: Request, res: Response) {
-    const { email } = req.body;
-
-    try {
-      // Find the user
-      const user = await User.findOne({ email });
-      if (!user) {
-        res.status(404).json({ message: "Usuario no encontrado" });
-        return;
-      }
-
-      // Create the token
-      const token = new Token();
-      token.token = generateToken();
-      token.user = user.id;
-
-      // Send the email
-      await AuthEmail.sendResentTokenEmail({
-        email: user.email,
-        token: token.token,
-        name: user.name
-      })
-
-      // Save the token
-      await Promise.allSettled([user.save(), token.save()]);
-      res.status(200).json({ message: "Revisa tu correo electrónico para reenviar el token" });
-    } catch (error) {
-      res.status(500).json({ message: "Error al reenviar el token" });
-    }
-  }
-
-  // Logout a user TODO:
-  static async logout(req: Request, res: Response) {
-    try {
-      res.send("Logout a user");
-    } catch (error) {
-      res.status(500).json({ message: "Error al logout el usuario" });
-    }
-  };
-
-  // Get a user by ID TODO:
-  static async getUser(req: Request, res: Response) {
-    try {
-      res.send("Obtener un usuario");
-    } catch (error) {
-      res.status(500).json({ message: "Error al obtener el usuario" });
-    }
-  };
-
-  // Update a user by ID TODO:
-  static async updateUser(req: Request, res: Response) {
-    try {
-      res.send("Usuario actualizado correctamente");
-    } catch (error) {
-      res.status(500).json({ message: "Error al actualizar el usuario" });
-    }
-  };
-
-  // Delete a user by ID TODO:
-  static async deleteUser(req: Request, res: Response) {
-    try {
-      res.send("Usuario eliminado correctamente");
-    } catch (error) {
-      res.status(500).json({ message: "Error al eliminar el usuario" });
     }
   };
 

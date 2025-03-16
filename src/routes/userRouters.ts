@@ -5,36 +5,28 @@ import UserValidation from "../middlewares/userMiddleware";
 const router = Router();
 
 // Router to create a new user 
-router.post("/create",
+router.post("/create-account",
   UserValidation.createUser,
   UserController.createUser);
 
 // Router to confirm a user by token
-router.post("/user-confirm",
+router.post("/confirm-account",
   UserValidation.confirmUser,
   UserController.confirmUser);
+
+// Router to reset token
+router.post("/resend-token",
+  UserValidation.resendToken,
+  UserController.resendToken);
+
+// Router to forgot password
+router.post("/forgot-password",
+  UserValidation.forgotPassword,
+  UserController.forgotPassword);
 
 // Router to login a user 
 router.post("/login",
   UserValidation.login,
   UserController.login);
-
-// Router to reset token
-router.post("/resent-token",
-  UserValidation.resentToken,
-  UserController.resentToken);
-
-// Router to logout a user TODO:
-router.post("/logout", UserController.logout);
-
-// Router to get a user by ID TODO:
-router.get("/:id", UserController.getUser);
-
-// Router to update a user by ID TODO:
-router.put("/:id", UserController.updateUser);
-
-// Router to delete a user by ID TODO:
-router.delete("/:id", UserController.deleteUser);
-
 
 export default router;

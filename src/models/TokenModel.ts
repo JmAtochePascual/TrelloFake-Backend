@@ -5,7 +5,7 @@ import mongoose, { Schema, Document, Types } from "mongoose";
 export type TokenType = Document & {
   token: string;
   user: Types.ObjectId;
-  // createdAt: Date;
+  createdAt: Date;
 }
 
 // Create the schema for the token model
@@ -19,11 +19,11 @@ const TokenSchema: Schema = new Schema({
     ref: "User",
     required: true
   },
-  // createdAt: {
-  //   type: Date,
-  //   default: Date.now(),
-  //   expires: "10m"
-  // }
+  createdAt: {
+    type: Date,
+    default: Date.now(),
+    expires: "10m"
+  }
 }, {
   timestamps: true
 });

@@ -9,7 +9,7 @@ type TAuthEmail = {
 class AuthEmail {
 
   // Email to create an user
-  static async sendCreateUserEmail({ email, name, token }: TAuthEmail) {
+  static async emailCreateAccount({ email, name, token }: TAuthEmail) {
     await transporter.sendMail({
       from: '"Trello Fake" <trello@fake.com>',
       to: email,
@@ -24,7 +24,7 @@ class AuthEmail {
             <li>Introduce el siguiente código de verificación en la página correspondiente:</li>
           </ul>
           <div style="text-align: center; margin: 20px 0;">
-            <a href="${process.env.FRONTEMD_URL}/auth/confirm-user" 
+            <a href="${process.env.FRONTEMD_URL}/auth/confirm-account" 
                style="background-color: #6A4EE9; color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 5px; display: inline-block; font-weight: bold;">
               Confirmar cuenta
             </a>
@@ -48,7 +48,7 @@ class AuthEmail {
       subject: "Intento de inicio de sesión en Trello Fake",
       html: `
         <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
-          <h2 style="color: #E94E4E; text-align: center;">Verificación pendiente</h2>
+          <h2 style="color: #6A4EE9; text-align: center;">Verificación pendiente</h2>
           <p>Estimado/a ${name},</p>
           <p>Hemos detectado un intento de inicio de sesión en Trello Fake, pero tu cuenta aún no ha sido confirmada.</p>
           <p>Para poder acceder a tu cuenta, es necesario completar la verificación. Sigue estos pasos:</p>
@@ -57,7 +57,7 @@ class AuthEmail {
             <li>Introduce el código de verificación en la página correspondiente:</li>
           </ul>
           <div style="text-align: center; margin: 20px 0;">
-            <a href="${process.env.FRONTEMD_URL}/auth/confirm-user" 
+            <a href="${process.env.FRONTEMD_URL}/auth/confirm-account" 
                style="background-color: #6A4EE9; color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 5px; display: inline-block; font-weight: bold;">
               Confirmar cuenta
             </a>
@@ -74,14 +74,14 @@ class AuthEmail {
   };
 
   // Email to resent token for user
-  static async sendResentTokenEmail({ email, name, token }: TAuthEmail) {
+  static async resendTokenEmail({ email, name, token }: TAuthEmail) {
     await transporter.sendMail({
       from: '"Trello Fake" <trello@fake.com>',
       to: email,
       subject: "Reenviar token de verificación",
       html: `
         <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
-          <h2 style="color: #E94E4E; text-align: center;">Verificación pendiente</h2>
+          <h2 style="color: #6A4EE9; text-align: center;">Verificación pendiente</h2>
           <p>Estimado/a ${name},</p>
           <p>Hemos detectado un intento de reenviar el token de verificación. Sigue estos pasos:</p>
           <ul>
@@ -89,7 +89,7 @@ class AuthEmail {
             <li>Introduce el código de verificación en la página correspondiente:</li>
           </ul>
           <div style="text-align: center; margin: 20px 0;">
-            <a href="${process.env.FRONTEMD_URL}/auth/confirm-user" 
+            <a href="${process.env.FRONTEMD_URL}/auth/confirm-account" 
                style="background-color: #6A4EE9; color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 5px; display: inline-block; font-weight: bold;">
               Confirmar cuenta
             </a>
@@ -98,6 +98,38 @@ class AuthEmail {
             ${token}
           </p>
           <p>Si no has intentado reenviar el token, puedes ignorar este mensaje.</p>
+          <p style="font-size: 12px; color: #777;">Atentamente,</p>
+          <p style="font-size: 12px; color: #777;"><strong>El equipo de Trello Fake</strong></p>
+        </div>
+      `
+    });
+  };
+
+  // Email to forgot password
+  static async forgotPasswordEmail({ email, name, token }: TAuthEmail) {
+    await transporter.sendMail({
+      from: '"Trello Fake" <trello@fake.com>',
+      to: email,
+      subject: "Recuperación de contraseña",
+      html: `
+        <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
+          <h2 style="color: #6A4EE9; text-align: center;">Recuperación de contraseña</h2>
+          <p>Estimado/a ${name},</p>
+          <p>Hemos detectado un intento de recuperación de contraseña. Sigue estos pasos:</p>
+          <ul>
+            <li>Haz clic en el siguiente botón para acceder a la página de recuperación.</li>
+            <li>Introduce el código de recuperación en la página correspondiente:</li>
+          </ul>
+          <div style="text-align: center; margin: 20px 0;">
+            <a href="${process.env.FRONTEMD_URL}/auth/reset-password" 
+               style="background-color: #6A4EE9; color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 5px; display: inline-block; font-weight: bold;">
+              Recuperar contraseña
+            </a>
+          </div>
+          <p style="text-align: center; font-size: 24px; font-weight: bold; background-color: #f4f4f4; padding: 10px; border-radius: 5px;">
+            ${token}
+          </p>
+          <p>Si no has intentado recuperar la contraseña, puedes ignorar este mensaje.</p>
           <p style="font-size: 12px; color: #777;">Atentamente,</p>
           <p style="font-size: 12px; color: #777;"><strong>El equipo de Trello Fake</strong></p>
         </div>
