@@ -68,7 +68,8 @@ class UserController {
       // Set the user as confirmed
       user.confirmed = true;
 
-      await Promise.allSettled([user.save(), tokenExists.deleteOne()]);
+      // await Promise.allSettled([user.save(), tokenExists.deleteOne()]);
+      await user.save();
       res.status(200).json({ message: "Usuario confirmado correctamente" });
     } catch (error) {
       res.status(500).json({ message: "Error al confirmar el usuario" });
@@ -129,6 +130,38 @@ class UserController {
       res.status(500).json({ message: "Error al login el usuario" });
     }
   };
+
+  // Resent token
+  static async resentToken(req: Request, res: Response) {
+    const { email } = req.body;
+
+    try {
+      // Find the user
+      const user = await User.findOne({ email });
+      if (!user) {
+        res.status(404).json({ message: "Usuario no encontrado" });
+        return;
+      }
+
+      // Create the token
+      const token = new Token();
+      token.token = generateToken();
+      token.user = user.id;
+
+      // Send the email
+      await AuthEmail.sendResentTokenEmail({
+        email: user.email,
+        token: token.token,
+        name: user.name
+      })
+
+      // Save the token
+      await Promise.allSettled([user.save(), token.save()]);
+      res.status(200).json({ message: "Revisa tu correo electrónico para reenviar el token" });
+    } catch (error) {
+      res.status(500).json({ message: "Error al reenviar el token" });
+    }
+  }
 
   // Logout a user TODO:
   static async logout(req: Request, res: Response) {

@@ -19,6 +19,11 @@ router.post("/login",
   UserValidation.login,
   UserController.login);
 
+// Router to reset token
+router.post("/resent-token",
+  UserValidation.resentToken,
+  UserController.resentToken);
+
 // Router to logout a user TODO:
 router.post("/logout", UserController.logout);
 

@@ -62,6 +62,21 @@ class UserValidation {
       next();
     },
   ];
+
+  // Middleware to reset token
+  static resentToken = [
+    check('email')
+      .notEmpty().withMessage('El correo electrónico es requerido')
+      .isEmail().withMessage('El correo electrónico no es válido'),
+    (req: Request, res: Response, next: NextFunction) => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        res.status(400).json({ errors: errors.array() });
+        return;
+      }
+      next();
+    },
+  ];
 };
 
 export default UserValidation;
