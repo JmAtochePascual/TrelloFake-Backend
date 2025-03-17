@@ -257,6 +257,18 @@ class UserController {
     }
   };
 
+  // Logout a user
+  static async logout(req: Request, res: Response) {
+    res.cookie("trelloToken", "", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+      expires: new Date(0)
+    });
+
+    res.sendStatus(200);
+  }
+
 }
 
 export default UserController;

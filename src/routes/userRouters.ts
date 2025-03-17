@@ -39,4 +39,8 @@ router.post("/login",
   UserValidation.login,
   UserController.login);
 
+// Router to logout a user 
+router.post("/logout",
+  UserController.logout);
+
 export default router;
