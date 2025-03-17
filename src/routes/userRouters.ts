@@ -6,13 +6,13 @@ const router = Router();
 
 // Router to create a new user 
 router.post("/create-account",
-  UserValidation.createUser,
-  UserController.createUser);
+  UserValidation.createAccount,
+  UserController.createAccount);
 
 // Router to confirm a user by token
 router.post("/confirm-account",
-  UserValidation.confirmUser,
-  UserController.confirmUser);
+  UserValidation.confirmAccount,
+  UserController.confirmAccount);
 
 // Router to reset token
 router.post("/resend-token",

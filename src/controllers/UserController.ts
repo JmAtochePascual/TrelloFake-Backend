@@ -9,7 +9,7 @@ import { generateJWT } from "../utils/jwt";
 class UserController {
 
   // Create a new user
-  static async createUser(req: Request, res: Response) {
+  static async createAccount(req: Request, res: Response) {
     const { name, email, password } = req.body;
 
     try {
@@ -47,7 +47,7 @@ class UserController {
   };
 
   // Confirm user
-  static async confirmUser(req: Request, res: Response) {
+  static async confirmAccount(req: Request, res: Response) {
     const { token } = req.body;
 
     try {
@@ -106,7 +106,7 @@ class UserController {
       })
 
       // Save the token
-      await Promise.allSettled([user.save(), token.save()]);
+      await token.save();
       res.status(200).json({ message: "Revisa tu correo electrónico para verificar tu cuenta" });
     } catch (error) {
       res.status(500).json({ message: "Error al reenviar el token" });

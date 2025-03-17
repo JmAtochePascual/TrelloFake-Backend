@@ -4,7 +4,7 @@ import { check, validationResult } from 'express-validator';
 class UserValidation {
 
   // Middleware to validate user creation
-  static createUser = [
+  static createAccount = [
     check('name')
       .notEmpty().withMessage('El nombre de usuario es requerido'),
 
@@ -31,9 +31,10 @@ class UserValidation {
   ];
 
   // Middleware to valide token
-  static confirmUser = [
+  static confirmAccount = [
     check('token')
       .notEmpty().withMessage('El token es requerido')
+      .isNumeric().withMessage('El token debe ser numérico')
       .isLength({ min: 6 }).withMessage('El token no es válido'),
     (req: Request, res: Response, next: NextFunction) => {
       const errors = validationResult(req);
@@ -79,6 +80,7 @@ class UserValidation {
   static verifyTokenPassword = [
     check('token')
       .notEmpty().withMessage('El token es requerido')
+      .isNumeric().withMessage('El token debe ser numérico')
       .isLength({ min: 6 }).withMessage('El token no es válido'),
     (req: Request, res: Response, next: NextFunction) => {
       const errors = validationResult(req);
@@ -93,6 +95,7 @@ class UserValidation {
   // Middleware to update password
   static updatePassword = [
     check('token')
+      .notEmpty().withMessage('El token es requerido')
       .isNumeric().withMessage('El token debe ser numérico')
       .isLength({ min: 6 }).withMessage('El token no es válido'),
 
