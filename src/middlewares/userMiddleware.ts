@@ -45,24 +45,6 @@ class UserValidation {
     },
   ];
 
-  // Middleware to login a user
-  static login = [
-    check('email')
-      .notEmpty().withMessage('El correo electrónico es requerido')
-      .isEmail().withMessage('El correo electrónico no es válido'),
-
-    check('password')
-      .notEmpty().withMessage('La contraseña es requerida'),
-    (req: Request, res: Response, next: NextFunction) => {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        res.status(400).json({ errors: errors.array() });
-        return;
-      }
-      next();
-    },
-  ];
-
   // Middleware to reset token
   static resendToken = [
     check('email')
@@ -98,6 +80,43 @@ class UserValidation {
     check('token')
       .notEmpty().withMessage('El token es requerido')
       .isLength({ min: 6 }).withMessage('El token no es válido'),
+    (req: Request, res: Response, next: NextFunction) => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        res.status(400).json({ errors: errors.array() });
+        return;
+      }
+      next();
+    },
+  ];
+
+  // Middleware to update password
+  static updatePassword = [
+    check('token')
+      .isNumeric().withMessage('El token debe ser numérico')
+      .isLength({ min: 6 }).withMessage('El token no es válido'),
+
+    check('password')
+      .notEmpty().withMessage('La contraseña es requerida')
+      .isLength({ min: 8 }).withMessage('La contraseña debe tener al menos 8 caracteres'),
+    (req: Request, res: Response, next: NextFunction) => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        res.status(400).json({ errors: errors.array() });
+        return;
+      }
+      next();
+    },
+  ];
+
+  // Middleware to login a user
+  static login = [
+    check('email')
+      .notEmpty().withMessage('El correo electrónico es requerido')
+      .isEmail().withMessage('El correo electrónico no es válido'),
+
+    check('password')
+      .notEmpty().withMessage('La contraseña es requerida'),
     (req: Request, res: Response, next: NextFunction) => {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {

@@ -138,7 +138,7 @@ class UserController {
       })
 
       // Save the token
-      await Promise.allSettled([user.save(), token.save()]);
+      await token.save();
       res.status(200).json({ message: "Revisa tu correo electrónico para cambiar tu contraseña" });
     } catch (error) {
       res.status(500).json({ message: "Error al reenviar el token" });
@@ -167,6 +167,38 @@ class UserController {
       res.status(200).json({ message: "Token válido" });
     } catch (error) {
       res.status(500).json({ message: "Error al verificar el token" });
+    }
+  }
+
+  // Update password
+  static async updatePassword(req: Request, res: Response) {
+    const { token } = req.params;
+    const { password } = req.body;
+
+    try {
+      // Find the token
+      const tokenExists = await Token.findOne({ token });
+      if (!tokenExists) {
+        res.status(404).json({ message: "Token no encontrado" });
+        return;
+      }
+
+      // Find the user
+      const user = await User.findById(tokenExists.user);
+      if (!user) {
+        res.status(404).json({ message: "Usuario no encontrado" });
+        return;
+      }
+
+      // Hash the password
+      const hashedPassword = await hashPassword(password);
+      user.password = hashedPassword;
+
+      // Save the user
+      await Promise.allSettled([user.save(), tokenExists.deleteOne()]);
+      res.status(200).json({ message: "Contraseña actualizada correctamente" });
+    } catch (error) {
+      res.status(500).json({ message: "Error al actualizar la contraseña" });
     }
   }
 

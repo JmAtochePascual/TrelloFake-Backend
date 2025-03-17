@@ -29,6 +29,11 @@ router.post("/verify-token",
   UserValidation.verifyTokenPassword,
   UserController.verifyTokenPassword);
 
+// Update password
+router.post("/update-password/:token",
+  UserValidation.updatePassword,
+  UserController.updatePassword);
+
 // Router to login a user 
 router.post("/login",
   UserValidation.login,
