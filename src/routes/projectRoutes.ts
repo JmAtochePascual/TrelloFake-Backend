@@ -3,6 +3,7 @@ import ProjectController from '../controllers/ProjectController';
 import ProjectValidation from '../middlewares/projectMiddleware';
 import TaskValidation from '../middlewares/taskMiddleware';
 import TaskController from '../controllers/TaskController';
+import UserValidation from '../middlewares/userMiddleware';
 
 
 const route = Router();
@@ -11,6 +12,7 @@ const route = Router();
 
 // Route to create a project
 route.post('/',
+  UserValidation.authenticatedUser,
   ProjectValidation.createProject,
   ProjectController.createProject);
 

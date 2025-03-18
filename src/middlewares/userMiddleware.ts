@@ -1,5 +1,16 @@
 import { Request, Response, NextFunction } from 'express';
 import { check, validationResult } from 'express-validator';
+import jwt from 'jsonwebtoken';
+import mongoose, { Types } from 'mongoose';
+import User from '../models/UserModel';
+
+declare global {
+  namespace Express {
+    interface Request {
+      userId: Types.ObjectId;
+    }
+  }
+}
 
 class UserValidation {
 
@@ -133,6 +144,35 @@ class UserValidation {
       next();
     },
   ];
+
+  // Middleware to user autenticated
+  static authenticatedUser = async (req: Request, res: Response, next: NextFunction) => {
+    const { trelloToken } = req.cookies;
+
+    try {
+      // Check if the token is provided
+      if (!trelloToken) {
+        res.status(401).json({ message: 'No token provided' });
+        return;
+      }
+
+      // Decode the token
+      const decoded = jwt.verify(trelloToken, process.env.JWT_SECRET!) as { id: Types.ObjectId };
+      const id = decoded.id;
+
+      // Find the user
+      const user = await User.findById(id);
+      if (!user) {
+        res.status(404).json({ message: 'Usuario no encontrado' });
+        return;
+      }
+
+      req.userId = user.id;
+      next();
+    } catch (error) {
+      res.status(401).json({ message: 'Error al autenticar el usuario' });
+    }
+  }
 };
 
 export default UserValidation;

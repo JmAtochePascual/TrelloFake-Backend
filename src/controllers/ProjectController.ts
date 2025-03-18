@@ -5,6 +5,7 @@ class ProjectController {
 
   // Method to create a project
   static createProject = async (req: Request, res: Response) => {
+    console.log(req.userId);
     try {
       const project = new Project(req.body);
       await project.save();
