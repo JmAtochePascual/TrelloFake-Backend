@@ -10,19 +10,21 @@ const route = Router();
 
 // * Routers for projects
 
+// Middleware to authenticate the user
+route.use(UserValidation.authenticatedUser);
+
 // Route to create a project
 route.post('/',
-  UserValidation.authenticatedUser,
   ProjectValidation.createProject,
   ProjectController.createProject);
 
 // Route to get all projects
 route.get('/',
-  UserValidation.authenticatedUser,
   ProjectController.getProjects);
 
 // Route to get a project by ID
 route.get('/:projectId',
+  UserValidation.authenticatedUser,
   ProjectValidation.getProject,
   ProjectController.getProject);
 
@@ -39,6 +41,7 @@ route.delete('/:projectId',
 
 // * Routers for Tasks
 
+// Middleware to validate the project and the task
 route.param('projectId', ProjectValidation.projectExists);
 route.param('taskId', TaskValidation.taskExists);
 

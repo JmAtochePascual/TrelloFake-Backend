@@ -30,11 +30,13 @@ const ProjectSchema: Schema = new Schema({
   },
   tasks: [{
     type: Types.ObjectId,
-    ref: 'Task'
+    ref: 'Task',
+    required: true
   }],
   manager: {
     type: Types.ObjectId,
-    ref: 'User'
+    ref: 'User',
+    required: true
   }
 }, {
   timestamps: true
