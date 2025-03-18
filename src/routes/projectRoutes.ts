@@ -84,6 +84,18 @@ route.delete('/:projectId/tasks/:taskId',
 route.post('/:projectId/team/find',
   TeamValidation.findMenberByEmail,
   TeamController.findMenberByEmail
-)
+);
+
+// Add a member to the team
+route.post('/:projectId/team',
+  TeamValidation.addMemberToTeam,
+  TeamController.addMemberToTeam
+);
+
+// Delete a member from the team
+route.delete('/:projectId/team',
+  TeamValidation.removeMemberFromTeam,
+  TeamController.removeMemberFromTeam
+);
 
 export default route;
