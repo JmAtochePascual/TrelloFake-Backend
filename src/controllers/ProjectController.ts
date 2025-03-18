@@ -96,6 +96,12 @@ class ProjectController {
         return;
       }
 
+      // Check if the user is the manager of the project
+      if (project.manager!.toString() !== req.userId.toString()) {
+        res.status(403).json({ message: "No tienes permisos para eliminar este proyecto" });
+        return;
+      }
+
       await project.deleteOne();
       res.status(200).json({ message: "Proyecto eliminado correctamente" });
     } catch (error) {
