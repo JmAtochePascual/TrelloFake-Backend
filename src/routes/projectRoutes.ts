@@ -18,6 +18,7 @@ route.post('/',
 
 // Route to get all projects
 route.get('/',
+  UserValidation.authenticatedUser,
   ProjectController.getProjects);
 
 // Route to get a project by ID
