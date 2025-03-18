@@ -58,13 +58,23 @@ class ProjectController {
     const { projectId } = req.params;
 
     try {
-      const project = await Project.findByIdAndUpdate(projectId, req.body, { new: true });
+      const project = await Project.findById(projectId);
 
       // Check if the project exists
       if (!project) {
         res.status(404).json({ message: "Proyecto no encontrado" });
         return;
       }
+
+      // Check if the user is the manager of the project
+      if (project.manager!.toString() !== req.userId.toString()) {
+        res.status(403).json({ message: "No tienes permisos para actualizar este proyecto" });
+        return;
+      }
+
+      project.projectName = req.body.projectName;
+      project.clientName = req.body.clientName;
+      project.description = req.body.description;
 
       await project.save();
       res.status(200).json({ message: "Proyecto actualizado correctamente" });
