@@ -269,6 +269,22 @@ class UserController {
     res.sendStatus(200);
   }
 
-}
+  // Get user
+  static async getProfile(req: Request, res: Response) {
+    try {
+      const user = await User.findById(req.userId).select("name");
+
+      if (!user) {
+        res.status(404).json({ message: "Usuario no encontrado" });
+        return;
+      }
+
+      res.status(200).json(user);
+    } catch (error) {
+      res.status(500).json({ message: "Error al obtener los datos del usuario" });
+    }
+  }
+
+};
 
 export default UserController;

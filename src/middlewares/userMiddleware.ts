@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { check, validationResult } from 'express-validator';
 import jwt from 'jsonwebtoken';
-import mongoose, { Types } from 'mongoose';
+import { Types } from 'mongoose';
 import User from '../models/UserModel';
 
 declare global {

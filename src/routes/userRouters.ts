@@ -43,4 +43,9 @@ router.post("/login",
 router.post("/logout",
   UserController.logout);
 
+// Router to get the user data
+router.get("/profile",
+  UserValidation.authenticatedUser,
+  UserController.getProfile);
+
 export default router;

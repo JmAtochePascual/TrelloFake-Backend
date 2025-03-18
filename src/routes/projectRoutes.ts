@@ -9,7 +9,6 @@ import UserValidation from '../middlewares/userMiddleware';
 const route = Router();
 
 // * Routers for projects
-
 // Middleware to authenticate the user
 route.use(UserValidation.authenticatedUser);
 
