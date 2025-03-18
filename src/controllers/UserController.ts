@@ -272,7 +272,7 @@ class UserController {
   // Get user
   static async getProfile(req: Request, res: Response) {
     try {
-      const user = await User.findById(req.userId).select("name");
+      const user = await User.findById(req.userId).select("-password");
 
       if (!user) {
         res.status(404).json({ message: "Usuario no encontrado" });

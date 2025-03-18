@@ -4,6 +4,8 @@ import ProjectValidation from '../middlewares/projectMiddleware';
 import TaskValidation from '../middlewares/taskMiddleware';
 import TaskController from '../controllers/TaskController';
 import UserValidation from '../middlewares/userMiddleware';
+import TeamController from '../controllers/TeamController';
+import TeamValidation from '../middlewares/teamMiddleware';
 
 
 const route = Router();
@@ -76,5 +78,12 @@ route.delete('/:projectId/tasks/:taskId',
   TaskValidation.deleteTask,
   TaskController.deleteTask);
 
+// * Routers for Team
+
+// Find a user by email
+route.post('/:projectId/team/find',
+  TeamValidation.findMenberByEmail,
+  TeamController.findMenberByEmail
+)
 
 export default route;
