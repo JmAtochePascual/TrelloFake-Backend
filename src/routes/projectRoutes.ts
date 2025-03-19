@@ -92,6 +92,11 @@ route.post('/:projectId/team',
   TeamController.addMemberToTeam
 );
 
+// Get all members of the team
+route.get('/:projectId/team',
+  TeamController.getTeam
+);
+
 // Delete a member from the team
 route.delete('/:projectId/team',
   TeamValidation.removeMemberFromTeam,
