@@ -76,17 +76,17 @@ class TeamController {
 
   // Method to delete a user from the team
   static async removeMemberFromTeam(req: Request, res: Response) {
-    const { id } = req.body;
+    const { memberId } = req.params as { memberId: any };
 
     try {
       // Check if the user is already in the team
-      if (!req.project.team.includes(id)) {
+      if (!req.project.team.includes(memberId)) {
         res.status(400).json({ message: "El usuario no está en el proyecto" });
         return;
       }
 
       // Remove user from team
-      req.project.team = req.project.team.filter((member) => member && member.toString() !== id.toString());
+      req.project.team = req.project.team.filter((member) => member && member.toString() !== memberId.toString());
       await req.project.save();
 
       res.status(200).json({ message: "Miembro eliminado del proyecto correctamente" });

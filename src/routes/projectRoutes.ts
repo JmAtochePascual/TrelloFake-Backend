@@ -98,7 +98,7 @@ route.get('/:projectId/team',
 );
 
 // Delete a member from the team
-route.delete('/:projectId/team',
+route.delete('/:projectId/team/:memberId',
   TeamValidation.removeMemberFromTeam,
   TeamController.removeMemberFromTeam
 );

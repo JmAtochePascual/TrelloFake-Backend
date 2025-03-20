@@ -33,8 +33,8 @@ class TeamValidation {
 
   // Middleware to delete a member from the team
   static removeMemberFromTeam = [
-    check('id')
-      .isMongoId().withMessage('ID inválido'),
+    check('memberId')
+      .isMongoId().withMessage('memberId inválido'),
     (req: Request, res: Response, next: NextFunction) => {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {

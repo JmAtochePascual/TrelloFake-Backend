@@ -21,7 +21,13 @@ class ProjectController {
   // Method to get all projects
   static getProjects = async (req: Request, res: Response) => {
     try {
-      const projects = await Project.find({ manager: req.userId }).populate('tasks');
+      const projects = await Project.find({
+        $or: [
+          { manager: req.userId },
+          { team: req.userId }
+        ]
+      }).populate('tasks');
+
       res.status(200).json(projects);
     } catch (error) {
       res.status(500).json({ message: "Error al obtener los proyectos" });
@@ -42,7 +48,7 @@ class ProjectController {
       }
 
       // Check if the user is the manager of the project
-      if (project.manager!.toString() !== req.userId.toString()) {
+      if (project.manager!.toString() !== req.userId.toString() && !project.team.includes(req.userId)) {
         res.status(403).json({ message: "No tienes permisos para obtener este proyecto" });
         return;
       }
