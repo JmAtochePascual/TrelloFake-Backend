@@ -48,6 +48,7 @@ route.param('taskId', TaskValidation.taskExists);
 
 // Create a task
 route.post('/:projectId/tasks',
+  TaskValidation.hasAuhtorization,
   TaskValidation.createTask,
   TaskController.createTask);
 
@@ -65,6 +66,7 @@ route.get('/:projectId/tasks/:taskId',
 
 // Update a task
 route.put('/:projectId/tasks/:taskId',
+  TaskValidation.hasAuhtorization,
   TaskValidation.updateTask,
   TaskController.updateTask);
 
@@ -75,6 +77,7 @@ route.post('/:projectId/tasks/:taskId/status',
 
 // Delete a task
 route.delete('/:projectId/tasks/:taskId',
+  TaskValidation.hasAuhtorization,
   TaskValidation.deleteTask,
   TaskController.deleteTask);
 

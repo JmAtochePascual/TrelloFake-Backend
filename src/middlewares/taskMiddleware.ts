@@ -155,6 +155,23 @@ class TaskValidation {
       res.status(500).json({ message: "Error al obtener la tarea" });
     }
   };
+
+  // Middleware to validate task authorization
+  static hasAuhtorization = async (req: Request, res: Response, next: NextFunction) => {
+    const project = req.project;
+    const userId = req.userId;
+
+    try {
+      if (project.manager!.toString() !== userId.toString()) {
+        res.status(403).json({ message: "Acción no valida" });
+        return;
+      }
+
+      next();
+    } catch (error) {
+      res.status(500).json({ message: "Error al intentar autorizar la tarea" });
+    }
+  };
 }
 
 export default TaskValidation;
