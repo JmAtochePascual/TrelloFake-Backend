@@ -121,4 +121,10 @@ route.get('/:projectId/tasks/:taskId/notes',
   NoteController.getNotes
 );
 
+// Router for deleting a note
+route.delete('/:projectId/tasks/:taskId/notes/:noteId',
+  NoteValidation.deleteNote,
+  NoteController.deleteNote
+);
+
 export default route;
