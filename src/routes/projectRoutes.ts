@@ -6,6 +6,8 @@ import TaskController from '../controllers/TaskController';
 import UserValidation from '../middlewares/userMiddleware';
 import TeamController from '../controllers/TeamController';
 import TeamValidation from '../middlewares/teamMiddleware';
+import NoteValidation from '../middlewares/noteMiddleware';
+import NoteController from '../controllers/NoteController';
 
 
 const route = Router();
@@ -104,6 +106,13 @@ route.get('/:projectId/team',
 route.delete('/:projectId/team/:memberId',
   TeamValidation.removeMemberFromTeam,
   TeamController.removeMemberFromTeam
+);
+
+// * Routes for Notes
+
+route.post('/:projectId/tasks/:taskId/notes',
+  NoteValidation.createNote,
+  NoteController.createNote
 );
 
 export default route;
