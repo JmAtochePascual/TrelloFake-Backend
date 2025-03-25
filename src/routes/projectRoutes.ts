@@ -110,9 +110,15 @@ route.delete('/:projectId/team/:memberId',
 
 // * Routes for Notes
 
+// Route for creating a note
 route.post('/:projectId/tasks/:taskId/notes',
   NoteValidation.createNote,
   NoteController.createNote
+);
+
+// Route for getting all notes of a task
+route.get('/:projectId/tasks/:taskId/notes',
+  NoteController.getNotes
 );
 
 export default route;
