@@ -68,6 +68,13 @@ class TaskController {
       // Update the task status
       task.status = req.body.status;
 
+      const data = {
+        user: req.userId,
+        status: req.body.status
+      };
+
+      task.completedBy.push(data);
+
       await task.save();
       res.status(200).json({ message: "Estado de la tarea actualizado correctamente" });
     } catch (error) {

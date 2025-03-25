@@ -135,7 +135,10 @@ class TaskValidation {
     const { project } = req;
 
     try {
-      const task = await Task.findById(taskId).populate('project');
+      const task = await Task.findById(taskId).populate('project').populate({
+        path: 'completedBy.user',
+        select: 'id name email'
+      });
 
       // Check if the task exists
       if (!task) {
