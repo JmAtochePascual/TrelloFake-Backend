@@ -48,4 +48,16 @@ router.get("/profile",
   UserValidation.authenticatedUser,
   UserController.getProfile);
 
+// Router to update profile
+router.put("/update-profile",
+  UserValidation.authenticatedUser,
+  UserValidation.updateProfile,
+  UserController.updateProfile);
+
+// Router to update password
+router.post("/change-password",
+  UserValidation.authenticatedUser,
+  UserValidation.changePassword,
+  UserController.changePassword);
+
 export default router;

@@ -285,6 +285,62 @@ class UserController {
     }
   }
 
+  // Update profile
+  static async updateProfile(req: Request, res: Response) {
+    const { name, email } = req.body;
+
+    try {
+      const user = await User.findById(req.userId);
+
+      if (!user) {
+        res.status(404).json({ message: "Usuario no encontrado" });
+        return;
+      };
+
+      // Check if email is already in use
+      const userExists = await User.findOne({ email });
+      if (userExists && userExists.id.toString() !== user.id.toString()) {
+        res.status(409).json({ message: "El correo electrónico ya está en uso" });
+        return;
+      };
+
+      user.name = name;
+      user.email = email;
+
+      await user.save();
+      res.status(200).json({ message: "Perfil actualizado correctamente" });
+    } catch (error) {
+      res.status(500).json({ message: "Error al actualizar el perfil" });
+    }
+  }
+
+  // Change password
+  static async changePassword(req: Request, res: Response) {
+    const { currentPassword, password } = req.body;
+
+    try {
+      const user = await User.findById(req.userId);
+
+      // Check if user exists
+      if (!user) {
+        res.status(404).json({ message: "Usuario no encontrado" });
+        return;
+      };
+
+      // Check if password is correct
+      const isMatch = await comparePassword(currentPassword, user.password);
+      if (!isMatch) {
+        res.status(401).json({ message: "Contraseña incorrecta" });
+        return;
+      };
+
+      user.password = await hashPassword(password);
+      await user.save();
+      res.status(200).json({ message: "Contraseña actualizada correctamente" });
+    } catch (error) {
+      res.status(500).json({ message: "Error al actualizar la contraseña" });
+    }
+  }
 };
 
 export default UserController;

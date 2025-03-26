@@ -145,6 +145,48 @@ class UserValidation {
     },
   ];
 
+  // Middleware to update profile
+  static updateProfile = [
+    check('name')
+      .notEmpty().withMessage('El nombre de usuario es requerido'),
+
+    check('email')
+      .notEmpty().withMessage('El correo electrónico es requerido')
+      .isEmail().withMessage('El correo electrónico no es válido'),
+    (req: Request, res: Response, next: NextFunction) => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        res.status(400).json({ errors: errors.array() });
+        return;
+      }
+      next();
+    },
+  ];
+
+  // Middleware to update password
+  static changePassword = [
+    check('currentPassword')
+      .notEmpty().withMessage('La contraseña actual es requerida'),
+
+    check('password')
+      .notEmpty().withMessage('La contraseña nueva es requerida')
+      .isLength({ min: 8 }).withMessage('La contraseña nueva debe tener al menos 8 caracteres'),
+
+    check('confirmPassword')
+      .notEmpty().withMessage('La confirmación de contraseña es requerida')
+      .custom((value, { req }) => value === req.body.password)
+      .withMessage('Las contraseñas no coinciden'),
+    (req: Request, res: Response, next: NextFunction) => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        res.status(400).json({ errors: errors.array() });
+        return;
+      }
+      next();
+    },
+  ];
+
+
   // Middleware to user autenticated
   static authenticatedUser = async (req: Request, res: Response, next: NextFunction) => {
     const { trelloToken } = req.cookies;
