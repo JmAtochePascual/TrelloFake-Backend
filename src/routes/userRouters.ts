@@ -60,4 +60,10 @@ router.post("/change-password",
   UserValidation.changePassword,
   UserController.changePassword);
 
+// Router to check password
+router.post("/check-password",
+  UserValidation.authenticatedUser,
+  UserValidation.checkPassword,
+  UserController.checkPassword);
+
 export default router;

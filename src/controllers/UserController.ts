@@ -341,6 +341,32 @@ class UserController {
       res.status(500).json({ message: "Error al actualizar la contraseña" });
     }
   }
+
+  // Check Password
+  static async checkPassword(req: Request, res: Response) {
+    const { password } = req.body;
+
+    try {
+      const user = await User.findById(req.userId);
+
+      // Check if user exists
+      if (!user) {
+        res.status(404).json({ message: "Usuario no encontrado" });
+        return;
+      };
+
+      // Check if password is correct
+      const isMatch = await comparePassword(password, user.password);
+      if (!isMatch) {
+        res.status(401).json({ message: "Contraseña incorrecta" });
+        return;
+      };
+
+      res.status(200).json({ message: "Contraseña correcta" });
+    } catch (error) {
+      res.status(500).json({ message: "Error al verificar la contraseña" });
+    }
+  }
 };
 
 export default UserController;

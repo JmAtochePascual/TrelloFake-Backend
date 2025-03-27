@@ -186,7 +186,6 @@ class UserValidation {
     },
   ];
 
-
   // Middleware to user autenticated
   static authenticatedUser = async (req: Request, res: Response, next: NextFunction) => {
     const { trelloToken } = req.cookies;
@@ -215,6 +214,20 @@ class UserValidation {
       res.status(401).json({ message: 'Error al autenticar el usuario' });
     }
   }
+
+  // Middleware to check password
+  static checkPassword = [
+    check('password')
+      .notEmpty().withMessage('La contraseña es requerida'),
+    (req: Request, res: Response, next: NextFunction) => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        res.status(400).json({ errors: errors.array() });
+        return;
+      }
+      next();
+    },
+  ];
 };
 
 export default UserValidation;

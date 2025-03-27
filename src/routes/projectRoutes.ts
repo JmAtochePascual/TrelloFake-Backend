@@ -54,12 +54,10 @@ route.post('/:projectId/tasks',
   TaskValidation.createTask,
   TaskController.createTask);
 
-
 // Get all tasks of a project
 route.get('/:projectId/tasks',
   TaskValidation.getAllTask,
   TaskController.getAllTasks);
-
 
 // Get a task by ID
 route.get('/:projectId/tasks/:taskId',
