@@ -1,6 +1,7 @@
 import mongoose, { Schema, Document, Types, PopulatedDoc } from "mongoose";
-import { TaskType } from "./TaskModel";
+import Task, { TaskType } from "./TaskModel";
 import { UserType } from "./UserModel";
+import Note from "./NoteModel";
 
 // Creates the types for the project model
 export type ProjectType = Document & {
@@ -46,6 +47,20 @@ const ProjectSchema: Schema = new Schema({
   }]
 }, {
   timestamps: true
+});
+
+// Middleware to delete tasks when a project is deleted
+ProjectSchema.pre("deleteOne", { document: true }, async function () {
+  const projectId = this._id;
+  if (!projectId) return;
+
+  const tasks = await Task.find({ project: projectId });
+
+  // Delete the notes associated with the tasks
+  for (const task of tasks) {
+    await Note.deleteMany({ task: task.id });
+  }
+  await Task.deleteMany({ project: projectId });
 });
 
 // Creates the model
